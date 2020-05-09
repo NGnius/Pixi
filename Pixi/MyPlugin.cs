@@ -4,15 +4,15 @@ using IllusionPlugin;
 // using GamecraftModdingAPI;
 using GamecraftModdingAPI.Commands;
 
-namespace HelloModdingWorld
+namespace Pixi
 {
 	public class MyPlugin : IPlugin // the Illusion Plugin Architecture (IPA) will ignore classes that don't implement IPlugin'
 	{
-		public string Name { get; } = Assembly.GetExecutingAssembly().GetName().Name; // HelloModdingWorld by default
+		public string Name { get; } = Assembly.GetExecutingAssembly().GetName().Name; // Pixi by default
 		// To change the name, change the project's name
 
 		public string Version { get; } = Assembly.GetExecutingAssembly().GetName().Version.ToString(); // 0.0.1 by default
-        // To change the version, change <Version>0.0.1</Version> in HelloModdingWorld.csproj
+        // To change the version, change <Version>0.0.1</Version> in Pixi.csproj
 
 		private static readonly string helloWorldCommandName = "HelloWorld"; // command name
 

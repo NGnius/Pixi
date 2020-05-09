@@ -3,10 +3,10 @@
   <PropertyGroup>
     <TargetFramework>net472</TargetFramework>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-    <Version>0.0.1</Version>
-    <Authors>Me</Authors>
+    <Version>0.1.0</Version>
+    <Authors>NGnius</Authors>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PackageProjectUrl>https://git.exmods.org/modtainers/HelloModdingWorld</PackageProjectUrl>
+    <PackageProjectUrl>https://git.exmods.org/NGnius/Pixi</PackageProjectUrl>
     <NeutralLanguage>en-CA</NeutralLanguage>
   </PropertyGroup>
 
