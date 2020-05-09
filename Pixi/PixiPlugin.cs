@@ -171,8 +171,8 @@ namespace Pixi
 		{
 			BlockColors color = BlockColors.Default;
 			int darkness = 0;
-			Logging.MetaDebugLog($"Color (r:{pixel.r}, g:{pixel.g}, b:{pixel.b})");
-			if (Mathf.Abs(pixel.r - pixel.g) < pixel.r * 0.1f && Mathf.Abs(pixel.r - pixel.b) < pixel.r * 0.1f)
+			//Logging.MetaDebugLog($"Color (r:{pixel.r}, g:{pixel.g}, b:{pixel.b})");
+			if (Mathf.Abs(pixel.r - pixel.g) <= pixel.r * 0.1f && Mathf.Abs(pixel.r - pixel.b) <= pixel.r * 0.1f)
 			{
 				color = BlockColors.White;
 				darkness = (int)(10 - ((pixel.r + pixel.g + pixel.b) * 3.5));
@@ -270,10 +270,10 @@ namespace Pixi
 					color = BlockColors.Aqua;
                 }
 			}
-			if (darkness > 9) darkness = 9;
+			if (darkness > 8) darkness = 8; // level 9 is not darker than lvl 8
 			if (darkness < 0) darkness = 0;
 			// darkness 0 is the most saturated (it's not just the lightest)
-			Logging.MetaDebugLog($"Quantized Color {color} d:{darkness}");
+			//Logging.MetaDebugLog($"Quantized Color {color} d:{darkness}");
 			return new QuantizedPixel { color = color, darkness = (byte)darkness, visible = pixel.a > 0.5f};
 		}
 	}
