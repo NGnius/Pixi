@@ -7,6 +7,21 @@ Think of it like automatic pixel art.
 
 To install the Pixi mod, copy the build's `Pixi.dll` into the `Plugins` folder in Gamecraft's main folder.
 
+## Usage
+
+Pixi adds new commands to Gamecraft's command line to import images into a game. 
+
+`PixiScale [width] [height]` sets the block canvas size (usually you'll want this to be the same size as your image). 
+When conversion using `Pixi2D` is done, if the canvas is larger than your image the image will be repeated. 
+If the canvas is smaller than your image, the image will be cropped based to the lower left corner.
+
+`Pixi2D "[image]"` converts an image to blocks and places it as blocks beside where you're standing (along the xy-plane). 
+If your image is not stored in the same folder as Gamecraft, you should specify the full filepath (eg `C:\path\to\image.png`) to the image.
+
+For example, if you want to add an image called `pixel_art.png`, 
+with a resolution of 1920x1080, stored in Gamecraft's installation directory, 
+execute the command `PixiScale 1920 1080` to set the size and then `Pixi2D "pixel_art.png` to load the image.
+
 ## Development
 
 Show your love by offering your time.
