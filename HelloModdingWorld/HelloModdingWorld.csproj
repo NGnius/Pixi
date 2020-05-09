@@ -1,0 +1,787 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net472</TargetFramework>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <Version>0.0.1</Version>
+    <Authors>Me</Authors>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://git.exmods.org/modtainers/HelloModdingWorld</PackageProjectUrl>
+    <NeutralLanguage>en-CA</NeutralLanguage>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Lib.Harmony" Version="1.2.0.1" />
+  </ItemGroup>
+
+<!--Start Dependencies-->
+  <ItemGroup>
+    <Reference Include="GamecraftModdingAPI">
+      <HintPath>..\ref\Plugins\GamecraftModdingAPI.dll</HintPath>
+      <HintPath>..\..\ref\Plugins\GamecraftModdingAPI.dll</HintPath>
+    </Reference>
+    <Reference Include="IllusionInjector">
+      <HintPath>..\ref\Gamecraft_Data\Managed\IllusionInjector.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\IllusionInjector.dll</HintPath>
+    </Reference>
+    <Reference Include="IllusionPlugin">
+      <HintPath>..\ref\Gamecraft_Data\Managed\IllusionPlugin.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\IllusionPlugin.dll</HintPath>
+    </Reference>
+    <Reference Include="JWT">
+      <HintPath>..\ref\Gamecraft_Data\Managed\JWT.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\JWT.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Burst.Unsafe">
+      <HintPath>..\ref\Gamecraft_Data\Managed\Unity.Burst.Unsafe.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\Unity.Burst.Unsafe.dll</HintPath>
+    </Reference>
+    <Reference Include="Facepunch.Steamworks.Win64">
+      <HintPath>..\ref\Gamecraft_Data\Managed\Facepunch.Steamworks.Win64.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\Facepunch.Steamworks.Win64.dll</HintPath>
+    </Reference>
+    <Reference Include="Rewired_Core">
+      <HintPath>..\ref\Gamecraft_Data\Managed\Rewired_Core.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\Rewired_Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Rewired_Windows">
+      <HintPath>..\ref\Gamecraft_Data\Managed\Rewired_Windows.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\Rewired_Windows.dll</HintPath>
+    </Reference>
+    <Reference Include="mscorlib">
+      <HintPath>..\ref\Gamecraft_Data\Managed\mscorlib.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\mscorlib.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\ref\Gamecraft_Data\Managed\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.AccessibilityModule">
+      <HintPath>..\ref\Gamecraft_Data\Managed\UnityEngine.AccessibilityModule.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\UnityEngine.AccessibilityModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.AIModule">
+      <HintPath>..\ref\Gamecraft_Data\Managed\UnityEngine.AIModule.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\UnityEngine.AIModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.AndroidJNIModule">
+      <HintPath>..\ref\Gamecraft_Data\Managed\UnityEngine.AndroidJNIModule.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\UnityEngine.AndroidJNIModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.AnimationModule">
+      <HintPath>..\ref\Gamecraft_Data\Managed\UnityEngine.AnimationModule.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\UnityEngine.AnimationModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.ARModule">
+      <HintPath>..\ref\Gamecraft_Data\Managed\UnityEngine.ARModule.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\UnityEngine.ARModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.AssetBundleModule">
+      <HintPath>..\ref\Gamecraft_Data\Managed\UnityEngine.AssetBundleModule.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\UnityEngine.AssetBundleModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.AudioModule">
+      <HintPath>..\ref\Gamecraft_Data\Managed\UnityEngine.AudioModule.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\UnityEngine.AudioModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.ClothModule">
+      <HintPath>..\ref\Gamecraft_Data\Managed\UnityEngine.ClothModule.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\UnityEngine.ClothModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.ClusterInputModule">
+      <HintPath>..\ref\Gamecraft_Data\Managed\UnityEngine.ClusterInputModule.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\UnityEngine.ClusterInputModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.ClusterRendererModule">
+      <HintPath>..\ref\Gamecraft_Data\Managed\UnityEngine.ClusterRendererModule.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\UnityEngine.ClusterRendererModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.CoreModule">
+      <HintPath>..\ref\Gamecraft_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.CrashReportingModule">
+      <HintPath>..\ref\Gamecraft_Data\Managed\UnityEngine.CrashReportingModule.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\UnityEngine.CrashReportingModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.DirectorModule">
+      <HintPath>..\ref\Gamecraft_Data\Managed\UnityEngine.DirectorModule.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\UnityEngine.DirectorModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine">
+      <HintPath>..\ref\Gamecraft_Data\Managed\UnityEngine.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\UnityEngine.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.DSPGraphModule">
+      <HintPath>..\ref\Gamecraft_Data\Managed\UnityEngine.DSPGraphModule.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\UnityEngine.DSPGraphModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.GameCenterModule">
+      <HintPath>..\ref\Gamecraft_Data\Managed\UnityEngine.GameCenterModule.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\UnityEngine.GameCenterModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.GridModule">
+      <HintPath>..\ref\Gamecraft_Data\Managed\UnityEngine.GridModule.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\UnityEngine.GridModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.HotReloadModule">
+      <HintPath>..\ref\Gamecraft_Data\Managed\UnityEngine.HotReloadModule.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\UnityEngine.HotReloadModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.ImageConversionModule">
+      <HintPath>..\ref\Gamecraft_Data\Managed\UnityEngine.ImageConversionModule.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\UnityEngine.ImageConversionModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.IMGUIModule">
+      <HintPath>..\ref\Gamecraft_Data\Managed\UnityEngine.IMGUIModule.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\UnityEngine.IMGUIModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.InputLegacyModule">
+      <HintPath>..\ref\Gamecraft_Data\Managed\UnityEngine.InputLegacyModule.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\UnityEngine.InputLegacyModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.InputModule">
+      <HintPath>..\ref\Gamecraft_Data\Managed\UnityEngine.InputModule.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\UnityEngine.InputModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.JSONSerializeModule">
+      <HintPath>..\ref\Gamecraft_Data\Managed\UnityEngine.JSONSerializeModule.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\UnityEngine.JSONSerializeModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.LocalizationModule">
+      <HintPath>..\ref\Gamecraft_Data\Managed\UnityEngine.LocalizationModule.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\UnityEngine.LocalizationModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.ParticleSystemModule">
+      <HintPath>..\ref\Gamecraft_Data\Managed\UnityEngine.ParticleSystemModule.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\UnityEngine.ParticleSystemModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.PerformanceReportingModule">
+      <HintPath>..\ref\Gamecraft_Data\Managed\UnityEngine.PerformanceReportingModule.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\UnityEngine.PerformanceReportingModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.Physics2DModule">
+      <HintPath>..\ref\Gamecraft_Data\Managed\UnityEngine.Physics2DModule.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\UnityEngine.Physics2DModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.PhysicsModule">
+      <HintPath>..\ref\Gamecraft_Data\Managed\UnityEngine.PhysicsModule.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\UnityEngine.PhysicsModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.ProfilerModule">
+      <HintPath>..\ref\Gamecraft_Data\Managed\UnityEngine.ProfilerModule.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\UnityEngine.ProfilerModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.ScreenCaptureModule">
+      <HintPath>..\ref\Gamecraft_Data\Managed\UnityEngine.ScreenCaptureModule.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\UnityEngine.ScreenCaptureModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.SharedInternalsModule">
+      <HintPath>..\ref\Gamecraft_Data\Managed\UnityEngine.SharedInternalsModule.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\UnityEngine.SharedInternalsModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.SpriteMaskModule">
+      <HintPath>..\ref\Gamecraft_Data\Managed\UnityEngine.SpriteMaskModule.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\UnityEngine.SpriteMaskModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.SpriteShapeModule">
+      <HintPath>..\ref\Gamecraft_Data\Managed\UnityEngine.SpriteShapeModule.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\UnityEngine.SpriteShapeModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.StreamingModule">
+      <HintPath>..\ref\Gamecraft_Data\Managed\UnityEngine.StreamingModule.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\UnityEngine.StreamingModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.SubstanceModule">
+      <HintPath>..\ref\Gamecraft_Data\Managed\UnityEngine.SubstanceModule.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\UnityEngine.SubstanceModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.SubsystemsModule">
+      <HintPath>..\ref\Gamecraft_Data\Managed\UnityEngine.SubsystemsModule.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\UnityEngine.SubsystemsModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.TerrainModule">
+      <HintPath>..\ref\Gamecraft_Data\Managed\UnityEngine.TerrainModule.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\UnityEngine.TerrainModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.TerrainPhysicsModule">
+      <HintPath>..\ref\Gamecraft_Data\Managed\UnityEngine.TerrainPhysicsModule.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\UnityEngine.TerrainPhysicsModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.TextCoreModule">
+      <HintPath>..\ref\Gamecraft_Data\Managed\UnityEngine.TextCoreModule.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\UnityEngine.TextCoreModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.TextRenderingModule">
+      <HintPath>..\ref\Gamecraft_Data\Managed\UnityEngine.TextRenderingModule.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\UnityEngine.TextRenderingModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.TilemapModule">
+      <HintPath>..\ref\Gamecraft_Data\Managed\UnityEngine.TilemapModule.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\UnityEngine.TilemapModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.TLSModule">
+      <HintPath>..\ref\Gamecraft_Data\Managed\UnityEngine.TLSModule.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\UnityEngine.TLSModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UIElementsModule">
+      <HintPath>..\ref\Gamecraft_Data\Managed\UnityEngine.UIElementsModule.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\UnityEngine.UIElementsModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UIModule">
+      <HintPath>..\ref\Gamecraft_Data\Managed\UnityEngine.UIModule.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\UnityEngine.UIModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UmbraModule">
+      <HintPath>..\ref\Gamecraft_Data\Managed\UnityEngine.UmbraModule.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\UnityEngine.UmbraModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UNETModule">
+      <HintPath>..\ref\Gamecraft_Data\Managed\UnityEngine.UNETModule.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\UnityEngine.UNETModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UnityAnalyticsModule">
+      <HintPath>..\ref\Gamecraft_Data\Managed\UnityEngine.UnityAnalyticsModule.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\UnityEngine.UnityAnalyticsModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UnityConnectModule">
+      <HintPath>..\ref\Gamecraft_Data\Managed\UnityEngine.UnityConnectModule.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\UnityEngine.UnityConnectModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UnityTestProtocolModule">
+      <HintPath>..\ref\Gamecraft_Data\Managed\UnityEngine.UnityTestProtocolModule.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\UnityEngine.UnityTestProtocolModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UnityWebRequestAssetBundleModule">
+      <HintPath>..\ref\Gamecraft_Data\Managed\UnityEngine.UnityWebRequestAssetBundleModule.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\UnityEngine.UnityWebRequestAssetBundleModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UnityWebRequestAudioModule">
+      <HintPath>..\ref\Gamecraft_Data\Managed\UnityEngine.UnityWebRequestAudioModule.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\UnityEngine.UnityWebRequestAudioModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UnityWebRequestModule">
+      <HintPath>..\ref\Gamecraft_Data\Managed\UnityEngine.UnityWebRequestModule.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\UnityEngine.UnityWebRequestModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UnityWebRequestTextureModule">
+      <HintPath>..\ref\Gamecraft_Data\Managed\UnityEngine.UnityWebRequestTextureModule.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\UnityEngine.UnityWebRequestTextureModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UnityWebRequestWWWModule">
+      <HintPath>..\ref\Gamecraft_Data\Managed\UnityEngine.UnityWebRequestWWWModule.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\UnityEngine.UnityWebRequestWWWModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.VehiclesModule">
+      <HintPath>..\ref\Gamecraft_Data\Managed\UnityEngine.VehiclesModule.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\UnityEngine.VehiclesModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.VFXModule">
+      <HintPath>..\ref\Gamecraft_Data\Managed\UnityEngine.VFXModule.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\UnityEngine.VFXModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.VideoModule">
+      <HintPath>..\ref\Gamecraft_Data\Managed\UnityEngine.VideoModule.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\UnityEngine.VideoModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.VRModule">
+      <HintPath>..\ref\Gamecraft_Data\Managed\UnityEngine.VRModule.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\UnityEngine.VRModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.WindModule">
+      <HintPath>..\ref\Gamecraft_Data\Managed\UnityEngine.WindModule.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\UnityEngine.WindModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.XRModule">
+      <HintPath>..\ref\Gamecraft_Data\Managed\UnityEngine.XRModule.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\UnityEngine.XRModule.dll</HintPath>
+    </Reference>
+    <Reference Include="Analytics">
+      <HintPath>..\ref\Gamecraft_Data\Managed\Analytics.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\Analytics.dll</HintPath>
+    </Reference>
+    <Reference Include="Assembly-CSharp-firstpass">
+      <HintPath>..\ref\Gamecraft_Data\Managed\Assembly-CSharp-firstpass.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\Assembly-CSharp-firstpass.dll</HintPath>
+    </Reference>
+    <Reference Include="Assembly-CSharp">
+      <HintPath>..\ref\Gamecraft_Data\Managed\Assembly-CSharp.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\Assembly-CSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="Authentication">
+      <HintPath>..\ref\Gamecraft_Data\Managed\Authentication.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\Authentication.dll</HintPath>
+    </Reference>
+    <Reference Include="BlockEntityFactory">
+      <HintPath>..\ref\Gamecraft_Data\Managed\BlockEntityFactory.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\BlockEntityFactory.dll</HintPath>
+    </Reference>
+    <Reference Include="Blocks.HUDFeedbackBlocks">
+      <HintPath>..\ref\Gamecraft_Data\Managed\Blocks.HUDFeedbackBlocks.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\Blocks.HUDFeedbackBlocks.dll</HintPath>
+    </Reference>
+    <Reference Include="ChannelsCommon">
+      <HintPath>..\ref\Gamecraft_Data\Managed\ChannelsCommon.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\ChannelsCommon.dll</HintPath>
+    </Reference>
+    <Reference Include="ClusterToWireConversion.Mock">
+      <HintPath>..\ref\Gamecraft_Data\Managed\ClusterToWireConversion.Mock.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\ClusterToWireConversion.Mock.dll</HintPath>
+    </Reference>
+    <Reference Include="CommandLine">
+      <HintPath>..\ref\Gamecraft_Data\Managed\CommandLine.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\CommandLine.dll</HintPath>
+    </Reference>
+    <Reference Include="DataLoader">
+      <HintPath>..\ref\Gamecraft_Data\Managed\DataLoader.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\DataLoader.dll</HintPath>
+    </Reference>
+    <Reference Include="DDNA">
+      <HintPath>..\ref\Gamecraft_Data\Managed\DDNA.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\DDNA.dll</HintPath>
+    </Reference>
+    <Reference Include="FMOD">
+      <HintPath>..\ref\Gamecraft_Data\Managed\FMOD.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\FMOD.dll</HintPath>
+    </Reference>
+    <Reference Include="FullGame">
+      <HintPath>..\ref\Gamecraft_Data\Managed\FullGame.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\FullGame.dll</HintPath>
+    </Reference>
+    <Reference Include="Gamecraft.Blocks.ConsoleBlock">
+      <HintPath>..\ref\Gamecraft_Data\Managed\Gamecraft.Blocks.ConsoleBlock.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\Gamecraft.Blocks.ConsoleBlock.dll</HintPath>
+    </Reference>
+    <Reference Include="Gamecraft.Blocks.GenericPhysicsBlocks">
+      <HintPath>..\ref\Gamecraft_Data\Managed\Gamecraft.Blocks.GenericPhysicsBlocks.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\Gamecraft.Blocks.GenericPhysicsBlocks.dll</HintPath>
+    </Reference>
+    <Reference Include="Gamecraft.Blocks.LogicBlock">
+      <HintPath>..\ref\Gamecraft_Data\Managed\Gamecraft.Blocks.LogicBlock.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\Gamecraft.Blocks.LogicBlock.dll</HintPath>
+    </Reference>
+    <Reference Include="Gamecraft.Blocks.TimerBlock">
+      <HintPath>..\ref\Gamecraft_Data\Managed\Gamecraft.Blocks.TimerBlock.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\Gamecraft.Blocks.TimerBlock.dll</HintPath>
+    </Reference>
+    <Reference Include="Gamecraft.Effects">
+      <HintPath>..\ref\Gamecraft_Data\Managed\Gamecraft.Effects.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\Gamecraft.Effects.dll</HintPath>
+    </Reference>
+    <Reference Include="Gamecraft.GUI.ConsoleBlock">
+      <HintPath>..\ref\Gamecraft_Data\Managed\Gamecraft.GUI.ConsoleBlock.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\Gamecraft.GUI.ConsoleBlock.dll</HintPath>
+    </Reference>
+    <Reference Include="Gamecraft.GUI.GraphicsScreen">
+      <HintPath>..\ref\Gamecraft_Data\Managed\Gamecraft.GUI.GraphicsScreen.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\Gamecraft.GUI.GraphicsScreen.dll</HintPath>
+    </Reference>
+    <Reference Include="Gamecraft.GUI.HUDFeedbackBlocks">
+      <HintPath>..\ref\Gamecraft_Data\Managed\Gamecraft.GUI.HUDFeedbackBlocks.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\Gamecraft.GUI.HUDFeedbackBlocks.dll</HintPath>
+    </Reference>
+    <Reference Include="Gamecraft.GUI.Tweaks">
+      <HintPath>..\ref\Gamecraft_Data\Managed\Gamecraft.GUI.Tweaks.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\Gamecraft.GUI.Tweaks.dll</HintPath>
+    </Reference>
+    <Reference Include="Gamecraft.GUI.Wires">
+      <HintPath>..\ref\Gamecraft_Data\Managed\Gamecraft.GUI.Wires.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\Gamecraft.GUI.Wires.dll</HintPath>
+    </Reference>
+    <Reference Include="Gamecraft.GUI.Wires.Mockup">
+      <HintPath>..\ref\Gamecraft_Data\Managed\Gamecraft.GUI.Wires.Mockup.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\Gamecraft.GUI.Wires.Mockup.dll</HintPath>
+    </Reference>
+    <Reference Include="Gamecraft.Tweaks">
+      <HintPath>..\ref\Gamecraft_Data\Managed\Gamecraft.Tweaks.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\Gamecraft.Tweaks.dll</HintPath>
+    </Reference>
+    <Reference Include="Gamecraft.Tweaks.Mockup">
+      <HintPath>..\ref\Gamecraft_Data\Managed\Gamecraft.Tweaks.Mockup.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\Gamecraft.Tweaks.Mockup.dll</HintPath>
+    </Reference>
+    <Reference Include="Gamecraft.Wires">
+      <HintPath>..\ref\Gamecraft_Data\Managed\Gamecraft.Wires.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\Gamecraft.Wires.dll</HintPath>
+    </Reference>
+    <Reference Include="Gamecraft.Wires.Input">
+      <HintPath>..\ref\Gamecraft_Data\Managed\Gamecraft.Wires.Input.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\Gamecraft.Wires.Input.dll</HintPath>
+    </Reference>
+    <Reference Include="Gamecraft.Wires.Mockup">
+      <HintPath>..\ref\Gamecraft_Data\Managed\Gamecraft.Wires.Mockup.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\Gamecraft.Wires.Mockup.dll</HintPath>
+    </Reference>
+    <Reference Include="GameState">
+      <HintPath>..\ref\Gamecraft_Data\Managed\GameState.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\GameState.dll</HintPath>
+    </Reference>
+    <Reference Include="GPUInstancer">
+      <HintPath>..\ref\Gamecraft_Data\Managed\GPUInstancer.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\GPUInstancer.dll</HintPath>
+    </Reference>
+    <Reference Include="Havok.Physics">
+      <HintPath>..\ref\Gamecraft_Data\Managed\Havok.Physics.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\Havok.Physics.dll</HintPath>
+    </Reference>
+    <Reference Include="Havok.Physics.Hybrid">
+      <HintPath>..\ref\Gamecraft_Data\Managed\Havok.Physics.Hybrid.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\Havok.Physics.Hybrid.dll</HintPath>
+    </Reference>
+    <Reference Include="LZ4">
+      <HintPath>..\ref\Gamecraft_Data\Managed\LZ4.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\LZ4.dll</HintPath>
+    </Reference>
+    <Reference Include="MultiplayerNetworking">
+      <HintPath>..\ref\Gamecraft_Data\Managed\MultiplayerNetworking.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\MultiplayerNetworking.dll</HintPath>
+    </Reference>
+    <Reference Include="MultiplayerTest">
+      <HintPath>..\ref\Gamecraft_Data\Managed\MultiplayerTest.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\MultiplayerTest.dll</HintPath>
+    </Reference>
+    <Reference Include="RCX.ScreenshotTaker">
+      <HintPath>..\ref\Gamecraft_Data\Managed\RCX.ScreenshotTaker.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\RCX.ScreenshotTaker.dll</HintPath>
+    </Reference>
+    <Reference Include="RobocraftX.AccountPreferences">
+      <HintPath>..\ref\Gamecraft_Data\Managed\RobocraftX.AccountPreferences.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\RobocraftX.AccountPreferences.dll</HintPath>
+    </Reference>
+    <Reference Include="RobocraftX.Blocks">
+      <HintPath>..\ref\Gamecraft_Data\Managed\RobocraftX.Blocks.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\RobocraftX.Blocks.dll</HintPath>
+    </Reference>
+    <Reference Include="RobocraftX.Blocks.Ghost">
+      <HintPath>..\ref\Gamecraft_Data\Managed\RobocraftX.Blocks.Ghost.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\RobocraftX.Blocks.Ghost.dll</HintPath>
+    </Reference>
+    <Reference Include="RobocraftX.Blocks.Triggers">
+      <HintPath>..\ref\Gamecraft_Data\Managed\RobocraftX.Blocks.Triggers.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\RobocraftX.Blocks.Triggers.dll</HintPath>
+    </Reference>
+    <Reference Include="RobocraftX.Building.BoxSelect">
+      <HintPath>..\ref\Gamecraft_Data\Managed\RobocraftX.Building.BoxSelect.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\RobocraftX.Building.BoxSelect.dll</HintPath>
+    </Reference>
+    <Reference Include="RobocraftX.Building.Jobs">
+      <HintPath>..\ref\Gamecraft_Data\Managed\RobocraftX.Building.Jobs.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\RobocraftX.Building.Jobs.dll</HintPath>
+    </Reference>
+    <Reference Include="RobocraftX.Character">
+      <HintPath>..\ref\Gamecraft_Data\Managed\RobocraftX.Character.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\RobocraftX.Character.dll</HintPath>
+    </Reference>
+    <Reference Include="RobocraftX.ClusterToWireConversion">
+      <HintPath>..\ref\Gamecraft_Data\Managed\RobocraftX.ClusterToWireConversion.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\RobocraftX.ClusterToWireConversion.dll</HintPath>
+    </Reference>
+    <Reference Include="RobocraftX.Common">
+      <HintPath>..\ref\Gamecraft_Data\Managed\RobocraftX.Common.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\RobocraftX.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="RobocraftX.ControlsScreen">
+      <HintPath>..\ref\Gamecraft_Data\Managed\RobocraftX.ControlsScreen.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\RobocraftX.ControlsScreen.dll</HintPath>
+    </Reference>
+    <Reference Include="RobocraftX.Crosshair">
+      <HintPath>..\ref\Gamecraft_Data\Managed\RobocraftX.Crosshair.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\RobocraftX.Crosshair.dll</HintPath>
+    </Reference>
+    <Reference Include="RobocraftX.FrontEnd">
+      <HintPath>..\ref\Gamecraft_Data\Managed\RobocraftX.FrontEnd.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\RobocraftX.FrontEnd.dll</HintPath>
+    </Reference>
+    <Reference Include="RobocraftX.GUI.BlockLabel">
+      <HintPath>..\ref\Gamecraft_Data\Managed\RobocraftX.GUI.BlockLabel.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\RobocraftX.GUI.BlockLabel.dll</HintPath>
+    </Reference>
+    <Reference Include="RobocraftX.GUI.DebugDisplay">
+      <HintPath>..\ref\Gamecraft_Data\Managed\RobocraftX.GUI.DebugDisplay.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\RobocraftX.GUI.DebugDisplay.dll</HintPath>
+    </Reference>
+    <Reference Include="RobocraftX.GUI">
+      <HintPath>..\ref\Gamecraft_Data\Managed\RobocraftX.GUI.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\RobocraftX.GUI.dll</HintPath>
+    </Reference>
+    <Reference Include="RobocraftX.GUI.RemoveBlock">
+      <HintPath>..\ref\Gamecraft_Data\Managed\RobocraftX.GUI.RemoveBlock.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\RobocraftX.GUI.RemoveBlock.dll</HintPath>
+    </Reference>
+    <Reference Include="RobocraftX.GUI.ScaleGhost">
+      <HintPath>..\ref\Gamecraft_Data\Managed\RobocraftX.GUI.ScaleGhost.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\RobocraftX.GUI.ScaleGhost.dll</HintPath>
+    </Reference>
+    <Reference Include="RobocraftX.GUIs.WorkshopPrefabs">
+      <HintPath>..\ref\Gamecraft_Data\Managed\RobocraftX.GUIs.WorkshopPrefabs.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\RobocraftX.GUIs.WorkshopPrefabs.dll</HintPath>
+    </Reference>
+    <Reference Include="RobocraftX.Input">
+      <HintPath>..\ref\Gamecraft_Data\Managed\RobocraftX.Input.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\RobocraftX.Input.dll</HintPath>
+    </Reference>
+    <Reference Include="RobocraftX.MachineEditor">
+      <HintPath>..\ref\Gamecraft_Data\Managed\RobocraftX.MachineEditor.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\RobocraftX.MachineEditor.dll</HintPath>
+    </Reference>
+    <Reference Include="RobocraftX.MainGame">
+      <HintPath>..\ref\Gamecraft_Data\Managed\RobocraftX.MainGame.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\RobocraftX.MainGame.dll</HintPath>
+    </Reference>
+    <Reference Include="RobocraftX.MainSimulation">
+      <HintPath>..\ref\Gamecraft_Data\Managed\RobocraftX.MainSimulation.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\RobocraftX.MainSimulation.dll</HintPath>
+    </Reference>
+    <Reference Include="RobocraftX.MockCharacter">
+      <HintPath>..\ref\Gamecraft_Data\Managed\RobocraftX.MockCharacter.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\RobocraftX.MockCharacter.dll</HintPath>
+    </Reference>
+    <Reference Include="RobocraftX.Multiplayer">
+      <HintPath>..\ref\Gamecraft_Data\Managed\RobocraftX.Multiplayer.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\RobocraftX.Multiplayer.dll</HintPath>
+    </Reference>
+    <Reference Include="RobocraftX.Multiplayer.NetworkEntityStream">
+      <HintPath>..\ref\Gamecraft_Data\Managed\RobocraftX.Multiplayer.NetworkEntityStream.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\RobocraftX.Multiplayer.NetworkEntityStream.dll</HintPath>
+    </Reference>
+    <Reference Include="RobocraftX.MultiplayerInput">
+      <HintPath>..\ref\Gamecraft_Data\Managed\RobocraftX.MultiplayerInput.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\RobocraftX.MultiplayerInput.dll</HintPath>
+    </Reference>
+    <Reference Include="Robocraftx.ObjectIdBlocks">
+      <HintPath>..\ref\Gamecraft_Data\Managed\Robocraftx.ObjectIdBlocks.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\Robocraftx.ObjectIdBlocks.dll</HintPath>
+    </Reference>
+    <Reference Include="RobocraftX.Party">
+      <HintPath>..\ref\Gamecraft_Data\Managed\RobocraftX.Party.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\RobocraftX.Party.dll</HintPath>
+    </Reference>
+    <Reference Include="RobocraftX.PartyGui">
+      <HintPath>..\ref\Gamecraft_Data\Managed\RobocraftX.PartyGui.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\RobocraftX.PartyGui.dll</HintPath>
+    </Reference>
+    <Reference Include="RobocraftX.Physics">
+      <HintPath>..\ref\Gamecraft_Data\Managed\RobocraftX.Physics.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\RobocraftX.Physics.dll</HintPath>
+    </Reference>
+    <Reference Include="RobocraftX.PilotSeat">
+      <HintPath>..\ref\Gamecraft_Data\Managed\RobocraftX.PilotSeat.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\RobocraftX.PilotSeat.dll</HintPath>
+    </Reference>
+    <Reference Include="RobocraftX.Player">
+      <HintPath>..\ref\Gamecraft_Data\Managed\RobocraftX.Player.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\RobocraftX.Player.dll</HintPath>
+    </Reference>
+    <Reference Include="RobocraftX.Rendering">
+      <HintPath>..\ref\Gamecraft_Data\Managed\RobocraftX.Rendering.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\RobocraftX.Rendering.dll</HintPath>
+    </Reference>
+    <Reference Include="RobocraftX.Rendering.Mock">
+      <HintPath>..\ref\Gamecraft_Data\Managed\RobocraftX.Rendering.Mock.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\RobocraftX.Rendering.Mock.dll</HintPath>
+    </Reference>
+    <Reference Include="RobocraftX.SaveAndLoad">
+      <HintPath>..\ref\Gamecraft_Data\Managed\RobocraftX.SaveAndLoad.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\RobocraftX.SaveAndLoad.dll</HintPath>
+    </Reference>
+    <Reference Include="RobocraftX.SaveGameDialog">
+      <HintPath>..\ref\Gamecraft_Data\Managed\RobocraftX.SaveGameDialog.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\RobocraftX.SaveGameDialog.dll</HintPath>
+    </Reference>
+    <Reference Include="RobocraftX.Serializers">
+      <HintPath>..\ref\Gamecraft_Data\Managed\RobocraftX.Serializers.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\RobocraftX.Serializers.dll</HintPath>
+    </Reference>
+    <Reference Include="RobocraftX.Services">
+      <HintPath>..\ref\Gamecraft_Data\Managed\RobocraftX.Services.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\RobocraftX.Services.dll</HintPath>
+    </Reference>
+    <Reference Include="RobocraftX.SignalHandling">
+      <HintPath>..\ref\Gamecraft_Data\Managed\RobocraftX.SignalHandling.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\RobocraftX.SignalHandling.dll</HintPath>
+    </Reference>
+    <Reference Include="RobocraftX.StateSync">
+      <HintPath>..\ref\Gamecraft_Data\Managed\RobocraftX.StateSync.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\RobocraftX.StateSync.dll</HintPath>
+    </Reference>
+    <Reference Include="RobocraftX_SpawnPoints">
+      <HintPath>..\ref\Gamecraft_Data\Managed\RobocraftX_SpawnPoints.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\RobocraftX_SpawnPoints.dll</HintPath>
+    </Reference>
+    <Reference Include="RobocraftX_TextBlock">
+      <HintPath>..\ref\Gamecraft_Data\Managed\RobocraftX_TextBlock.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\RobocraftX_TextBlock.dll</HintPath>
+    </Reference>
+    <Reference Include="RobocratX.SimulationCompositionRoot">
+      <HintPath>..\ref\Gamecraft_Data\Managed\RobocratX.SimulationCompositionRoot.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\RobocratX.SimulationCompositionRoot.dll</HintPath>
+    </Reference>
+    <Reference Include="StringFormatter">
+      <HintPath>..\ref\Gamecraft_Data\Managed\StringFormatter.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\StringFormatter.dll</HintPath>
+    </Reference>
+    <Reference Include="Svelto.Common_3">
+      <HintPath>..\ref\Gamecraft_Data\Managed\Svelto.Common_3.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\Svelto.Common_3.dll</HintPath>
+    </Reference>
+    <Reference Include="Svelto.ECS.Debugger">
+      <HintPath>..\ref\Gamecraft_Data\Managed\Svelto.ECS.Debugger.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\Svelto.ECS.Debugger.dll</HintPath>
+    </Reference>
+    <Reference Include="Svelto.ECS.Debugger.Internal">
+      <HintPath>..\ref\Gamecraft_Data\Managed\Svelto.ECS.Debugger.Internal.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\Svelto.ECS.Debugger.Internal.dll</HintPath>
+    </Reference>
+    <Reference Include="Svelto.ECS">
+      <HintPath>..\ref\Gamecraft_Data\Managed\Svelto.ECS.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\Svelto.ECS.dll</HintPath>
+    </Reference>
+    <Reference Include="Svelto.Services">
+      <HintPath>..\ref\Gamecraft_Data\Managed\Svelto.Services.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\Svelto.Services.dll</HintPath>
+    </Reference>
+    <Reference Include="Svelto.Tasks">
+      <HintPath>..\ref\Gamecraft_Data\Managed\Svelto.Tasks.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\Svelto.Tasks.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Addressables">
+      <HintPath>..\ref\Gamecraft_Data\Managed\Unity.Addressables.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\Unity.Addressables.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Burst">
+      <HintPath>..\ref\Gamecraft_Data\Managed\Unity.Burst.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\Unity.Burst.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Collections">
+      <HintPath>..\ref\Gamecraft_Data\Managed\Unity.Collections.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\Unity.Collections.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Deformations">
+      <HintPath>..\ref\Gamecraft_Data\Managed\Unity.Deformations.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\Unity.Deformations.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Entities">
+      <HintPath>..\ref\Gamecraft_Data\Managed\Unity.Entities.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\Unity.Entities.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Entities.Hybrid">
+      <HintPath>..\ref\Gamecraft_Data\Managed\Unity.Entities.Hybrid.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\Unity.Entities.Hybrid.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Jobs">
+      <HintPath>..\ref\Gamecraft_Data\Managed\Unity.Jobs.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\Unity.Jobs.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Mathematics">
+      <HintPath>..\ref\Gamecraft_Data\Managed\Unity.Mathematics.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\Unity.Mathematics.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Mathematics.Extensions">
+      <HintPath>..\ref\Gamecraft_Data\Managed\Unity.Mathematics.Extensions.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\Unity.Mathematics.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Mathematics.Extensions.Hybrid">
+      <HintPath>..\ref\Gamecraft_Data\Managed\Unity.Mathematics.Extensions.Hybrid.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\Unity.Mathematics.Extensions.Hybrid.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Physics">
+      <HintPath>..\ref\Gamecraft_Data\Managed\Unity.Physics.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\Unity.Physics.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Physics.Hybrid">
+      <HintPath>..\ref\Gamecraft_Data\Managed\Unity.Physics.Hybrid.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\Unity.Physics.Hybrid.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Platforms.Common">
+      <HintPath>..\ref\Gamecraft_Data\Managed\Unity.Platforms.Common.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\Unity.Platforms.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Postprocessing.Runtime">
+      <HintPath>..\ref\Gamecraft_Data\Managed\Unity.Postprocessing.Runtime.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\Unity.Postprocessing.Runtime.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Properties">
+      <HintPath>..\ref\Gamecraft_Data\Managed\Unity.Properties.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\Unity.Properties.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Properties.Reflection">
+      <HintPath>..\ref\Gamecraft_Data\Managed\Unity.Properties.Reflection.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\Unity.Properties.Reflection.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Properties.UI">
+      <HintPath>..\ref\Gamecraft_Data\Managed\Unity.Properties.UI.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\Unity.Properties.UI.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.RenderPipeline.Universal.ShaderLibrary">
+      <HintPath>..\ref\Gamecraft_Data\Managed\Unity.RenderPipeline.Universal.ShaderLibrary.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\Unity.RenderPipeline.Universal.ShaderLibrary.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.RenderPipelines.Core.Runtime">
+      <HintPath>..\ref\Gamecraft_Data\Managed\Unity.RenderPipelines.Core.Runtime.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\Unity.RenderPipelines.Core.Runtime.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.RenderPipelines.Core.ShaderLibrary">
+      <HintPath>..\ref\Gamecraft_Data\Managed\Unity.RenderPipelines.Core.ShaderLibrary.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\Unity.RenderPipelines.Core.ShaderLibrary.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.RenderPipelines.ShaderGraph.ShaderGraphLibrary">
+      <HintPath>..\ref\Gamecraft_Data\Managed\Unity.RenderPipelines.ShaderGraph.ShaderGraphLibrary.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\Unity.RenderPipelines.ShaderGraph.ShaderGraphLibrary.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.RenderPipelines.Universal.Runtime">
+      <HintPath>..\ref\Gamecraft_Data\Managed\Unity.RenderPipelines.Universal.Runtime.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\Unity.RenderPipelines.Universal.Runtime.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.RenderPipelines.Universal.Shaders">
+      <HintPath>..\ref\Gamecraft_Data\Managed\Unity.RenderPipelines.Universal.Shaders.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\Unity.RenderPipelines.Universal.Shaders.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.ResourceManager">
+      <HintPath>..\ref\Gamecraft_Data\Managed\Unity.ResourceManager.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\Unity.ResourceManager.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Scenes.Hybrid">
+      <HintPath>..\ref\Gamecraft_Data\Managed\Unity.Scenes.Hybrid.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\Unity.Scenes.Hybrid.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.ScriptableBuildPipeline">
+      <HintPath>..\ref\Gamecraft_Data\Managed\Unity.ScriptableBuildPipeline.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\Unity.ScriptableBuildPipeline.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Serialization">
+      <HintPath>..\ref\Gamecraft_Data\Managed\Unity.Serialization.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\Unity.Serialization.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.TextMeshPro">
+      <HintPath>..\ref\Gamecraft_Data\Managed\Unity.TextMeshPro.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\Unity.TextMeshPro.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Timeline">
+      <HintPath>..\ref\Gamecraft_Data\Managed\Unity.Timeline.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\Unity.Timeline.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Transforms">
+      <HintPath>..\ref\Gamecraft_Data\Managed\Unity.Transforms.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\Unity.Transforms.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.Transforms.Hybrid">
+      <HintPath>..\ref\Gamecraft_Data\Managed\Unity.Transforms.Hybrid.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\Unity.Transforms.Hybrid.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UI">
+      <HintPath>..\ref\Gamecraft_Data\Managed\UnityEngine.UI.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\UnityEngine.UI.dll</HintPath>
+    </Reference>
+    <Reference Include="uREPL">
+      <HintPath>..\ref\Gamecraft_Data\Managed\uREPL.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\uREPL.dll</HintPath>
+    </Reference>
+    <Reference Include="VisualProfiler">
+      <HintPath>..\ref\Gamecraft_Data\Managed\VisualProfiler.dll</HintPath>
+      <HintPath>..\..\ref\Gamecraft_Data\Managed\VisualProfiler.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+  </ItemGroup>
+<!--End Dependencies-->
+
+</Project>
