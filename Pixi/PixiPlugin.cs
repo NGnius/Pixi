@@ -16,14 +16,16 @@ namespace Pixi
 {
 	public class PixiPlugin : IPlugin // the Illusion Plugin Architecture (IPA) will ignore classes that don't implement IPlugin'
 	{
+		private const uint PIXEL_WARNING_THRESHOLD = 25_000;
+
 		public string Name { get; } = Assembly.GetExecutingAssembly().GetName().Name; // Pixi
 		// To change the name, change the project's name
 
 		public string Version { get; } = Assembly.GetExecutingAssembly().GetName().Version.ToString(); // 0.1.0 (for now)
         // To change the version, change <Version>#.#.#</Version> in Pixi.csproj
 
-		private uint width = 32;
-		private uint height = 32;
+		private uint width = 64;
+		private uint height = 64;
 
 		private double blockSize = 0.2;
 
@@ -88,7 +90,6 @@ namespace Pixi
 
         private void pixelate2DFile(string filepath)
 		{
-			Logging.CommandLogWarning("Large images may freeze your game for a long period");
             // Load image file and convert to Gamecraft blocks
 			Texture2D img = new Texture2D((int)width, (int)height);
             // load file into texture
@@ -100,7 +101,7 @@ namespace Pixi
 			catch (Exception e)
 			{
 				Logging.CommandLogError($"Failed to load picture data. Reason: {e.Message}");
-				Logging.LogException(e);
+				Logging.MetaLog(e.Message + "\n" + e.StackTrace);
 				return;
 			}
 			float3 position = playerLocationEngine.GetPlayerLocation(0u);
@@ -157,6 +158,10 @@ namespace Pixi
 		{
 			width = _width;
 			height = _height;
+			if (width * height > PIXEL_WARNING_THRESHOLD)
+			{
+				Logging.CommandLogWarning($"That's a lot of pixels ({width * height}px)!\nImporting large images may freeze your game for a long time.");
+			}
 			Logging.CommandLog($"Pixi image size set to {width}x{height}");
 		}
 
@@ -171,6 +176,7 @@ namespace Pixi
 		{
 			BlockColors color = BlockColors.Default;
 			int darkness = 0;
+			bool force = false;
 #if DEBUG
 			Logging.MetaLog($"Color (r:{pixel.r}, g:{pixel.g}, b:{pixel.b})");
 #endif
@@ -183,23 +189,23 @@ namespace Pixi
 			else if (pixel.r >= pixel.g && pixel.r >= pixel.b)
 			{
 				// Red is highest
-				if ((pixel.r - pixel.g) > pixel.r * 0.66 && (pixel.r - pixel.b) > pixel.r * 0.66)
+				if ((pixel.r - pixel.g) > pixel.r * 0.65 && (pixel.r - pixel.b) > pixel.r * 0.55)
                 {
 					// Red is much higher than other pixels
-                    darkness = (int)(10 - (pixel.r * 9.9));
+                    darkness = (int)(9 - (pixel.r * 8.01));
 					color = BlockColors.Red;
                 }
-				else if ((pixel.g - pixel.b) > pixel.g * 0.3)
+				else if ((pixel.g - pixel.b) > pixel.g * 0.25)
 				{
 					// Green is much higher than blue
-					if ((pixel.r - pixel.g) < pixel.r * 0.7)
+					if ((pixel.r - pixel.g) < pixel.r * 0.8)
 					{
-						darkness = (int)(10 - ((pixel.r + pixel.g) * 4));
+						darkness = (int)(10 - ((pixel.r * 2.1 + pixel.g) * 2.1));
 						color = BlockColors.Orange;
 					}
 					else
 					{
-						darkness = (int)(10 - ((pixel.r + pixel.g) * 4.8));
+						darkness = (int)(10 - ((pixel.r * 2.1 + pixel.g) * 2.2));
 						color = BlockColors.Yellow;
 					}
 
@@ -214,16 +220,17 @@ namespace Pixi
 				{
 					// Green is close strength to blue
 					darkness = (int)(10 - ((pixel.r * 2.1 + pixel.g + pixel.b) * 2.5));
-					color = BlockColors.Pink;
+					color = darkness < 6 ? BlockColors.Pink : BlockColors.Orange;
+					force = true;
 				}
 			}
 			else if (pixel.g >= pixel.r && pixel.g >= pixel.b)
 			{
 				// Green is highest
-				if ((pixel.g - pixel.r) > pixel.g * 0.66 && (pixel.g - pixel.b) > pixel.g * 0.66)
+				if ((pixel.g - pixel.r) > pixel.g * 0.6 && (pixel.g - pixel.b) > pixel.g * 0.48)
                 {
                     // Green is much higher than other pixels
-					darkness = (int)(10 - (pixel.g * 9.9));
+					darkness = (int)(10 - (pixel.g * 10.1));
 					color = BlockColors.Green;
                 }
 				else if ((pixel.r - pixel.b) > pixel.r * 0.3)
@@ -232,7 +239,7 @@ namespace Pixi
 					darkness = (int)(10 - ((pixel.r + pixel.g) * 5.1));
                     color = BlockColors.Yellow;
                 }
-				else if ((pixel.b - pixel.r) > pixel.b * 0.3)
+				else if ((pixel.b - pixel.r) > pixel.b * 0.2)
                 {
                     // Blue is much higher than red
 					darkness = (int)(9 - ((pixel.g + pixel.b) * 5.1));
@@ -241,17 +248,17 @@ namespace Pixi
                 else
                 {
                     // Red is close strength to blue
-					darkness = (int)(10 - ((pixel.r + pixel.g * 2.1 + pixel.b) * 3));
+					darkness = (int)(10 - ((pixel.r + pixel.g * 2.2 + pixel.b) * 2.9));
 					color = BlockColors.Lime;
                 }
 			}
 			else if (pixel.b >= pixel.g && pixel.b >= pixel.r)
 			{
 				// Blue is highest
-				if ((pixel.b - pixel.g) > pixel.b * 0.66 && (pixel.b - pixel.r) > pixel.b * 0.66)
+				if ((pixel.b - pixel.g) > pixel.b * 0.6 && (pixel.b - pixel.r) > pixel.b * 0.6)
                 {
 					// Blue is much higher than other pixels
-                    darkness = (int)(10 - (pixel.b * 9.9));
+                    darkness = (int)(10 - (pixel.b * 10.1));
 					color = BlockColors.Blue;
                 }
 				else if ((pixel.g - pixel.r) > pixel.g * 0.3)
@@ -271,11 +278,11 @@ namespace Pixi
                 else
                 {
                     // Green is close strength to red
-					darkness = (int)(10 - ((pixel.r + pixel.g + pixel.b * 2.1) * 3.1));
+					darkness = (int)(10 - ((pixel.r + pixel.g + pixel.b * 2.2) * 3.0));
 					color = BlockColors.Aqua;
                 }
 			}
-			if (darkness > 8) darkness = 8; // level 9 is not darker than lvl 8
+			if (darkness > 8 && !force) darkness = 8; // level 9 is not darker than lvl 8
 			if (darkness < 0) darkness = 0;
 			// darkness 0 is the most saturated (it's not just the lightest)
 #if DEBUG
