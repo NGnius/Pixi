@@ -171,7 +171,9 @@ namespace Pixi
 		{
 			BlockColors color = BlockColors.Default;
 			int darkness = 0;
-			//Logging.MetaDebugLog($"Color (r:{pixel.r}, g:{pixel.g}, b:{pixel.b})");
+#if DEBUG
+			Logging.MetaLog($"Color (r:{pixel.r}, g:{pixel.g}, b:{pixel.b})");
+#endif
 			if (Mathf.Abs(pixel.r - pixel.g) <= pixel.r * 0.1f && Mathf.Abs(pixel.r - pixel.b) <= pixel.r * 0.1f)
 			{
 				color = BlockColors.White;
@@ -181,99 +183,104 @@ namespace Pixi
 			else if (pixel.r >= pixel.g && pixel.r >= pixel.b)
 			{
 				// Red is highest
-				if ((pixel.r - pixel.g) > pixel.r * 0.5 && (pixel.r - pixel.b) > pixel.r * 0.5)
+				if ((pixel.r - pixel.g) > pixel.r * 0.66 && (pixel.r - pixel.b) > pixel.r * 0.66)
                 {
 					// Red is much higher than other pixels
-					darkness = (int)(10 - (pixel.r * 11));
+                    darkness = (int)(10 - (pixel.r * 9.9));
 					color = BlockColors.Red;
                 }
 				else if ((pixel.g - pixel.b) > pixel.g * 0.3)
 				{
 					// Green is much higher than blue
-					darkness = (int)(10 - ((pixel.r + pixel.g) * 5.1));
-					if ((pixel.r - pixel.g) > pixel.r * 0.5)
+					if ((pixel.r - pixel.g) < pixel.r * 0.7)
 					{
+						darkness = (int)(10 - ((pixel.r + pixel.g) * 4));
 						color = BlockColors.Orange;
 					}
 					else
 					{
+						darkness = (int)(10 - ((pixel.r + pixel.g) * 4.8));
 						color = BlockColors.Yellow;
 					}
 
 				}
-				else if ((pixel.b - pixel.g) > pixel.b * 0.5)
+				else if ((pixel.b - pixel.g) > pixel.b * 0.3)
 				{
 					// Blue is much higher than green
-					darkness = (int)(10 - ((pixel.r + pixel.b) * 4.9));
+					darkness = (int)(10 - ((pixel.r + pixel.b) * 5.0));
 					color = BlockColors.Purple;
 				}
 				else
 				{
 					// Green is close strength to blue
-					darkness = (int)(10 - ((pixel.r + pixel.g + pixel.b) * 4.8));
+					darkness = (int)(10 - ((pixel.r * 2.1 + pixel.g + pixel.b) * 2.5));
 					color = BlockColors.Pink;
 				}
 			}
 			else if (pixel.g >= pixel.r && pixel.g >= pixel.b)
 			{
 				// Green is highest
-				if ((pixel.g - pixel.r) > pixel.g * 0.5 && (pixel.g - pixel.b) > pixel.g * 0.5)
+				if ((pixel.g - pixel.r) > pixel.g * 0.66 && (pixel.g - pixel.b) > pixel.g * 0.66)
                 {
                     // Green is much higher than other pixels
-					darkness = (int)(10 - (pixel.g * 11));
+					darkness = (int)(10 - (pixel.g * 9.9));
 					color = BlockColors.Green;
                 }
-				else if ((pixel.r - pixel.b) > pixel.r * 0.5)
+				else if ((pixel.r - pixel.b) > pixel.r * 0.3)
                 {
                     // Red is much higher than blue
 					darkness = (int)(10 - ((pixel.r + pixel.g) * 5.1));
                     color = BlockColors.Yellow;
                 }
-				else if ((pixel.b - pixel.r) > pixel.b * 0.5)
+				else if ((pixel.b - pixel.r) > pixel.b * 0.3)
                 {
                     // Blue is much higher than red
-					darkness = (int)(10 - ((pixel.g + pixel.b) * 5.1));
+					darkness = (int)(9 - ((pixel.g + pixel.b) * 5.1));
 					color = BlockColors.Aqua;
                 }
                 else
                 {
                     // Red is close strength to blue
-					darkness = (int)(10 - ((pixel.r + pixel.g + pixel.b) * 4.8));
+					darkness = (int)(10 - ((pixel.r + pixel.g * 2.1 + pixel.b) * 3));
 					color = BlockColors.Lime;
                 }
 			}
 			else if (pixel.b >= pixel.g && pixel.b >= pixel.r)
 			{
 				// Blue is highest
-				if ((pixel.b - pixel.g) > pixel.b * 0.5 && (pixel.b - pixel.r) > pixel.b * 0.5)
+				if ((pixel.b - pixel.g) > pixel.b * 0.66 && (pixel.b - pixel.r) > pixel.b * 0.66)
                 {
 					// Blue is much higher than other pixels
-					darkness = (int)(10 - (pixel.b * 11));
+                    darkness = (int)(10 - (pixel.b * 9.9));
 					color = BlockColors.Blue;
                 }
-				else if ((pixel.g - pixel.r) > pixel.g * 0.5)
+				else if ((pixel.g - pixel.r) > pixel.g * 0.3)
                 {
                     // Green is much higher than red
 					darkness = (int)(10 - ((pixel.g + pixel.b) * 5.1));
+					if (darkness == 4 || darkness == 5) darkness = 0;
+					else if (darkness < 3) darkness = 4;
 					color = BlockColors.Aqua;
                 }
-				else if ((pixel.r - pixel.g) > pixel.r * 0.5)
+				else if ((pixel.r - pixel.g) > pixel.r * 0.3)
                 {
 					// Red is much higher than green
-					darkness = (int)(10 - ((pixel.r + pixel.b) * 4.9));
+					darkness = (int)(10 - ((pixel.r + pixel.b) * 5.0));
                     color = BlockColors.Purple;
                 }
                 else
                 {
                     // Green is close strength to red
-					darkness = (int)(10 - ((pixel.r + pixel.g + pixel.b) * 4.9));
+					darkness = (int)(10 - ((pixel.r + pixel.g + pixel.b * 2.1) * 3.1));
 					color = BlockColors.Aqua;
                 }
 			}
 			if (darkness > 8) darkness = 8; // level 9 is not darker than lvl 8
 			if (darkness < 0) darkness = 0;
 			// darkness 0 is the most saturated (it's not just the lightest)
-			//Logging.MetaDebugLog($"Quantized Color {color} d:{darkness}");
+#if DEBUG
+			Logging.MetaLog($"Quantized Color {color} d:{darkness}");
+#endif
 			return new QuantizedPixel { color = color, darkness = (byte)darkness, visible = pixel.a > 0.5f};
 		}
 	}
