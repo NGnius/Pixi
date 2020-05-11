@@ -114,7 +114,13 @@ namespace Pixi
             // any further pixel-grouping optimisations (eg 2D grouping) risk increasing conversion time higher than O(x*y)
 			for (int x = 0; x < width; x++)
 			{
-				QuantizedPixel qVoxel = new QuantizedPixel{color = BlockColors.Default, darkness = 10};
+				QuantizedPixel qVoxel = new QuantizedPixel
+				{
+					block = BlockIDs.AbsoluteMathsBlock, // impossible canvas block
+					color = BlockColors.Default,
+					darkness = 10,
+					visible = false,
+				};
 				float3 scale = new float3(1, 1, 1);
 				position.x += (float)(blockSize);
 				for (int y = 0; y < height; y++)
@@ -122,14 +128,17 @@ namespace Pixi
 					//position.y += (float)blockSize;
 					Color pixel = img.GetPixel(x, y);
 					QuantizedPixel qPixel = quantizeColor(pixel);
-					if (qPixel.darkness != qVoxel.darkness || qPixel.color != qVoxel.color || qPixel.visible != qVoxel.visible)
+					if (qPixel.darkness != qVoxel.darkness
+					    || qPixel.color != qVoxel.color
+					    || qPixel.visible != qVoxel.visible
+					    || qPixel.block != qVoxel.block)
 					{
 						if (y != 0)
 						{
 							if (qVoxel.visible)
 							{
 								position.y = zero_y + (float)((y * blockSize + (y - scale.y) * blockSize) / 2);
-								Placement.PlaceBlock(BlockIDs.AluminiumCube, position, color: qVoxel.color, darkness: qVoxel.darkness, scale: scale);
+								Placement.PlaceBlock(qVoxel.block, position, color: qVoxel.color, darkness: qVoxel.darkness, scale: scale);
 								blockCount++;
 							}
 							scale = new float3(1, 1, 1);
@@ -145,13 +154,13 @@ namespace Pixi
 				if (qVoxel.visible)
 				{
 					position.y = zero_y + (float)((height * blockSize + (height - scale.y) * blockSize) / 2);
-                    Placement.PlaceBlock(BlockIDs.AluminiumCube, position, color: qVoxel.color, darkness: qVoxel.darkness, scale: scale);
+					Placement.PlaceBlock(qVoxel.block, position, color: qVoxel.color, darkness: qVoxel.darkness, scale: scale);
 					blockCount++;
 				}
 				//position.y = zero_y;
 			}
 			Logging.CommandLog($"Placed {width}x{height} image beside you ({blockCount} blocks total)");
-			Logging.MetaLog($"Saved {(width * height) - blockCount} blocks while placing {filepath}");
+			Logging.MetaLog($"Saved {(width * height) - blockCount} blocks ({width * height / blockCount}x) while placing {filepath}");
 		}
 
         private void setScale(uint _width, uint _height)
@@ -282,18 +291,29 @@ namespace Pixi
 					color = BlockColors.Aqua;
                 }
 			}
-			if (darkness > 8 && !force) darkness = 8; // level 9 is not darker than lvl 8
-			if (darkness < 0) darkness = 0;
+			// level 9 is not darker than lvl 8
+			if (darkness > 8 && !force) darkness = 8;
 			// darkness 0 is the most saturated (it's not just the lightest)
+			if (darkness < 0) darkness = 0;
+
+			QuantizedPixel result = new QuantizedPixel
+			{
+				block = pixel.a > 0.75 ? BlockIDs.AluminiumCube : BlockIDs.GlassCube,
+				color = color,
+				darkness = (byte)darkness,
+				visible = pixel.a > 0.5f,
+			};
 #if DEBUG
-			Logging.MetaLog($"Quantized Color {color} d:{darkness}");
+			Logging.MetaLog($"Quantized {color} (b:{result.block} d:{result.darkness} v:{result.visible})");
 #endif
-			return new QuantizedPixel { color = color, darkness = (byte)darkness, visible = pixel.a > 0.5f};
+			return result;
 		}
 	}
 
 	internal struct QuantizedPixel
 	{
+		public BlockIDs block;
+
 		public BlockColors color;
 
 		public byte darkness;
