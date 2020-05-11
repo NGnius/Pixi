@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net472</TargetFramework>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-    <Version>0.1.0</Version>
+    <Version>0.2.0</Version>
     <Authors>NGnius</Authors>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://git.exmods.org/NGnius/Pixi</PackageProjectUrl>
