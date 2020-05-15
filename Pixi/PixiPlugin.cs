@@ -7,10 +7,11 @@ using UnityEngine;
 using Unity.Mathematics; // float3
 
 using IllusionPlugin;
-// using GamecraftModdingAPI;
+using GamecraftModdingAPI;
 using GamecraftModdingAPI.Commands;
 using GamecraftModdingAPI.Utility;
 using GamecraftModdingAPI.Blocks;
+using GamecraftModdingAPI.Players;
 
 namespace Pixi
 {
@@ -28,8 +29,6 @@ namespace Pixi
 		private uint height = 64;
 
 		private double blockSize = 0.2;
-
-		private PlayerLocationEngine playerLocationEngine = new PlayerLocationEngine();
 
         // called when Gamecraft shuts down
 		public void OnApplicationQuit()
@@ -71,7 +70,6 @@ namespace Pixi
             // register commands so the modding API knows about it
 			CommandManager.AddCommand(pixelate2DCommand);
 			CommandManager.AddCommand(scaleCommand);
-			GameEngineManager.AddGameEngine(playerLocationEngine);
             
 			GamecraftModdingAPI.Utility.Logging.LogDebug($"{Name} has started up");
 		}
@@ -104,7 +102,7 @@ namespace Pixi
 				Logging.MetaLog(e.Message + "\n" + e.StackTrace);
 				return;
 			}
-			float3 position = playerLocationEngine.GetPlayerLocation(0u);
+			float3 position = new Player(PlayerType.Local).Position;
 			uint blockCount = 0;
 			position.x += 1f;
 			//position.y += 1f;
@@ -138,7 +136,7 @@ namespace Pixi
 							if (qVoxel.visible)
 							{
 								position.y = zero_y + (float)((y * blockSize + (y - scale.y) * blockSize) / 2);
-								Placement.PlaceBlock(qVoxel.block, position, color: qVoxel.color, darkness: qVoxel.darkness, scale: scale);
+								Block.PlaceNew(qVoxel.block, position, color: qVoxel.color, darkness: qVoxel.darkness, scale: scale);
 								blockCount++;
 							}
 							scale = new float3(1, 1, 1);
@@ -154,7 +152,7 @@ namespace Pixi
 				if (qVoxel.visible)
 				{
 					position.y = zero_y + (float)((height * blockSize + (height - scale.y) * blockSize) / 2);
-					Placement.PlaceBlock(qVoxel.block, position, color: qVoxel.color, darkness: qVoxel.darkness, scale: scale);
+					Block.PlaceNew(qVoxel.block, position, color: qVoxel.color, darkness: qVoxel.darkness, scale: scale);
 					blockCount++;
 				}
 				//position.y = zero_y;
