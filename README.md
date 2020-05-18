@@ -5,7 +5,8 @@ Think of it like automatic pixel art.
 
 ## Installation
 
-To install the Pixi mod, copy the build's `Pixi.dll` into the `Plugins` folder in Gamecraft's main folder.
+To install the Pixi mod, copy `Pixi.dll` (from the latest release) into the `Plugins` folder in Gamecraft's main folder.
+You'll also need [GamecraftModdingAPI](https://git.exmods.org/modtainers/GamecraftModdingAPI) installed and Gamecraft patched with [GCIPA](https://git.exmods.org/modtainers/GCIPA/releases).
 
 ## Usage
 

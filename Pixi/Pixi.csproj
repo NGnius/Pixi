@@ -3,16 +3,12 @@
   <PropertyGroup>
     <TargetFramework>net472</TargetFramework>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-    <Version>0.2.0</Version>
+    <Version>0.3.0</Version>
     <Authors>NGnius</Authors>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://git.exmods.org/NGnius/Pixi</PackageProjectUrl>
     <NeutralLanguage>en-CA</NeutralLanguage>
   </PropertyGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Lib.Harmony" Version="1.2.0.1" />
-  </ItemGroup>
 
 <!--Start Dependencies-->
   <ItemGroup>
@@ -781,7 +777,33 @@
       <HintPath>..\..\ref\Gamecraft_Data\Managed\VisualProfiler.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="GamecraftModdingAPI">
+      <HintPath>..\..\ref\Plugins\GamecraftModdingAPI.dll</HintPath>
+    </Reference>
+    <Reference Include="GamecraftModdingAPI">
+      <HintPath>..\..\ref\Plugins\GamecraftModdingAPI.dll</HintPath>
+    </Reference>
+    <Reference Include="GamecraftModdingAPI">
+      <HintPath>..\..\ref\Plugins\GamecraftModdingAPI.dll</HintPath>
+    </Reference>
+    <Reference Include="GamecraftModdingAPI">
+      <HintPath>..\..\ref\Plugins\GamecraftModdingAPI.dll</HintPath>
+    </Reference>
+    <Reference Include="GamecraftModdingAPI">
+      <HintPath>..\..\ref\Plugins\GamecraftModdingAPI.dll</HintPath>
+    </Reference>
+    <Reference Include="GamecraftModdingAPI">
+      <HintPath>..\..\ref\Plugins\GamecraftModdingAPI.dll</HintPath>
+    </Reference>
+    <Reference Include="GamecraftModdingAPI">
+      <HintPath>..\..\ref\Plugins\GamecraftModdingAPI.dll</HintPath>
+    </Reference>
+    <Reference Include="GamecraftModdingAPI">
+      <HintPath>..\..\ref\Plugins\GamecraftModdingAPI.dll</HintPath>
+    </Reference>
+    <Reference Include="GamecraftModdingAPI">
+      <HintPath>..\..\ref\Plugins\GamecraftModdingAPI.dll</HintPath>
+    </Reference>
   </ItemGroup>
 <!--End Dependencies-->
-
 </Project>
