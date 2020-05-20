@@ -22,7 +22,7 @@ namespace Pixi.Robots
 		{
 			CommandBuilder.Builder()
 						  .Name("PixiBotFile")
-			              .Description("Converts a robot file from RCBUP into Gamecraft blocks. Larger robots will freeze your game until conversion completes. (Pixi)")
+			              .Description("Converts a robot file from RCBUP into Gamecraft blocks. Larger robots will freeze your game until conversion completes.")
 						  .Action<string>(ImportRobotFile)
 						  .Build();
 		}
@@ -31,7 +31,7 @@ namespace Pixi.Robots
 		{
 			CommandBuilder.Builder()
 						  .Name("PixiBot")
-						  .Description("Downloads a robot from Robocraft's Factory and converts it into Gamecraft blocks. Larger robots will freeze your game until conversion completes. (Pixi)")
+						  .Description("Downloads a robot from Robocraft's Factory and converts it into Gamecraft blocks. Larger robots will freeze your game until conversion completes.")
 						  .Action<string>(ImportRobotOnline)
 						  .Build();
 		}

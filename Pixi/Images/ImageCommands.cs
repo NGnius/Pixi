@@ -32,7 +32,7 @@ namespace Pixi.Images
 		{
 			CommandBuilder.Builder()
                           .Name("PixiThicc")
-                          .Description("Set the image thickness for Pixi2D. Use this if you'd like add depth to a 2D image after importing. (Pixi)")
+                          .Description("Set the image thickness for Pixi2D. Use this if you'd like add depth to a 2D image after importing.")
 			              .Action<int>((d) => {
 							  if (d > 0)
 							  {
@@ -47,7 +47,7 @@ namespace Pixi.Images
 		{
 			CommandBuilder.Builder()
                           .Name("Pixi2D")
-                          .Description("Converts an image to blocks. Larger images will freeze your game until conversion completes. (Pixi)")
+                          .Description("Converts an image to blocks. Larger images will freeze your game until conversion completes.")
                           .Action<string>(Pixelate2DFile)
                           .Build();
 		}
@@ -56,7 +56,7 @@ namespace Pixi.Images
 		{
 			CommandBuilder.Builder()
 						  .Name("PixiText")
-						  .Description("Converts an image to coloured text in a new text block. Larger images may cause save issues. (Pixi)")
+						  .Description("Converts an image to coloured text in a new text block. Larger images may cause save issues.")
 						  .Action<string>(Pixelate2DFileToTextBlock)
 						  .Build();
 		}
@@ -65,7 +65,7 @@ namespace Pixi.Images
 		{
 			CommandBuilder.Builder()
 						  .Name("PixiConsole")
-						  .Description("Converts an image to a ChangeTextBlockCommand in a new console block. The first parameter is the image filepath and the second parameter is the text block id. Larger images may cause save issues. (Pixi)")
+						  .Description("Converts an image to a ChangeTextBlockCommand in a new console block. The first parameter is the image filepath and the second parameter is the text block id. Larger images may cause save issues.")
 			              .Action<string, string>(Pixelate2DFileToCommand)
 						  .Build();
 		}
