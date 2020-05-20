@@ -37,7 +37,7 @@ It's important to include the file extension, since Pixi isn't psychic (yet).
 
 **NOTE**
 
-Do not forget the `@"` before and `"` after the command argument, otherwise the command won't work. 
+For the preceeding commands, do not forget the `@"` before and `"` after the command argument, otherwise the command won't work. 
 If your image is not stored in the same folder as Gamecraft, you should specify the full filepath (eg `C:\path\to\image.png`) to the image. 
 This works best with `.PNG` images, but `.JPG` also works -- you just won't be able to use transparency-based features. 
 Optionally, if you know your command argument won't have a backslash `\` in it, you can omit the `@` symbol. 
@@ -48,21 +48,31 @@ The default thickness is 1.
 
 ### Behaviour
 
-Pixi takes an image file and converts every pixel to a coloured block. 
-Unfortunately, an image file supports over 6 million colours and Gamecraft only has 100 paint colours (and only 90 are used by Pixi). 
-Pixi uses an algorithm to convert each pixel an image into the closest paint colour, but colour accuracy will never be as good as a regular image. 
+PixiText and PixiConsole share the same image conversion system. 
+The conversion system converts every pixel to a [<color> tag](http://digitalnativestudios.com/textmeshpro/docs/rich-text/#color) followed by a square text character. 
+For PixiText, the resulting character string is set to the text field of the text block that the command places. 
+For PixiConsole, the character string is automatically set to a console block in the form `ChangeTextBlockCommand [text block id] [character string]`. 
 
-Pixi's colour-conversion algorithm also uses pixel transparency to you can cut out shapes. 
-A pixel which has opacity of less than 75% will be not be converted into a solid block. 
+Pixi2D takes an image file and converts every pixel to a coloured block. 
+Unfortunately, an image file supports over 6 million colours and Gamecraft only has 100 paint colours (and only 90 are used by Pixi2D). 
+Pixi2D uses an algorithm to convert each pixel an image into the closest paint colour, but colour accuracy will never be as good as a regular image. 
+
+Pixi2D's colour-conversion algorithm also uses pixel transparency so you can cut out shapes. 
+A pixel which has opacity of less than 50% will be ignored. 
 A pixel which has an opacity between 75% and 50% will be converted into a glass cube. 
 A pixel which has an opacity greater than 75% will be converted into an aluminium cube. 
 This only works with `.PNG` image files since the `.JPG` format doesn't store transparency. 
 
-Pixi also groups blocks together, since images have a lot of pixels. 
+Pixi2D also groups blocks together, since images have a lot of pixels. 
 After the colour-conversion algorithm, Pixi groups blocks in the same column with the same paint colour together. 
 The grouping algorithm reduces the block count by over 75% in ideal cases, and it can reduce the block count by 50% in most cases. 
 Imagine a standard 1080p screen (1920x1080 pixels), which has more than 2 million pixels. 
-Pixi could import that image with less than 500K blocks, which will still hurt Gamecraft's performance even on good PCs but it won't make it completely unusable like 2M blocks will. 
+Pixi2D could import that image with less than 500K blocks, which will still hurt Gamecraft's performance even on good PCs but it won't make it completely unusable like 2M blocks will. 
+
+PixiBot and PixiBotFile convert robot data to equivalent Gamecraft blocks. 
+If the conversion algorithm encounters a block it cannot convert, it will place a text block, with additional information, instead. 
+PixiBot uses the Factory to download robots, which involves a partial re-implementation of [rcbup](https://github.com/NGnius/rcbup). 
+Robot parsing uses information from [RobocraftAssembler](https://github.com/dddontshoot/RoboCraftAssembler). 
 
 ## Suggestions and Bugs
 
