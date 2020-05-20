@@ -149,7 +149,7 @@ namespace Pixi.Images
 
 		public static string TextureToString(Texture2D img)
 		{
-			StringBuilder imgString = new StringBuilder("<cspace=-0.1em><line-height=42%>");
+			StringBuilder imgString = new StringBuilder("<cspace=-0.13em><line-height=40%>");
 			for (int y = img.height-1; y >= 0 ; y--) // text origin is top right, but img origin is bottom right
             {
 				for (int x = 0; x < img.width; x++)

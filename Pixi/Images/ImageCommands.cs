@@ -167,7 +167,7 @@ namespace Pixi.Images
             position.x += 1f;
             position.y += (float)blockSize;
 			string text = PixelUtility.TextureToString(img);
-			TextBlock textBlock = TextBlock.PlaceNew(position, scale: new float3(Mathf.Ceil(img.width / 16), Mathf.Ceil(img.height / 16), 1));
+			TextBlock textBlock = TextBlock.PlaceNew(position, scale: new float3(Mathf.Ceil(img.width / 16), 1, Mathf.Ceil(img.height / 16)));
 			textBlock.Text = text;
 			byte[] textHash;
 			using (HashAlgorithm hasher = SHA256.Create())
