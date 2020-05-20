@@ -345,16 +345,61 @@ namespace Pixi.Robots
 			}
 			else if (cubeName.Contains("prism") || cubeName.Contains("edge"))
 			{
-				result.block = BlockIDs.AluminiumSlope;
+				if (cubeName.Contains("round"))
+				{
+					if (cubeName.Contains("glass") || cubeName.Contains("windshield"))
+                    {
+                        result.block = BlockIDs.GlassRoundedSlope;
+                    } else
+					    result.block = BlockIDs.AluminiumRoundedSlope;
+				}
+				else
+				{
+                    if (cubeName.Contains("glass") || cubeName.Contains("windshield"))
+                    {
+						result.block = BlockIDs.GlassSlope;
+                    } else
+					    result.block = BlockIDs.AluminiumSlope;
+				}
 			}
 			else if (cubeName.Contains("inner"))
             {
-                result.block = BlockIDs.AluminiumSlicedCube;
-            }
+                if (cubeName.Contains("round"))
+                {
+					if (cubeName.Contains("glass") || cubeName.Contains("windshield"))
+					{
+						result.block = BlockIDs.GlassRoundedSlicedCube;
+					} else
+					    result.block = BlockIDs.AluminiumRoundedSlicedCube;
+                }
+				else
+				{
+                    if (cubeName.Contains("glass") || cubeName.Contains("windshield"))
+                    {
+                        result.block = BlockIDs.GlassSlicedCube;
+                    } else
+					    result.block = BlockIDs.AluminiumSlicedCube;
+				}
+			}
 			else if (cubeName.Contains("tetra") || cubeName.Contains("corner"))
             {
-				result.block = BlockIDs.AluminiumCorner;
-            }
+                if (cubeName.Contains("round"))
+                {
+                    if (cubeName.Contains("glass") || cubeName.Contains("windshield"))
+                    {
+						result.block = BlockIDs.GlassRoundedCorner;
+                    } else
+                        result.block = BlockIDs.AluminiumRoundedCorner;
+                }
+				else
+				{
+                    if (cubeName.Contains("glass") || cubeName.Contains("windshield"))
+                    {
+                        result.block = BlockIDs.GlassCorner;
+                    } else
+					    result.block = BlockIDs.AluminiumCorner;
+				}
+			}
 			else if (cubeName.Contains("pyramid"))
 			{
 				result.block = BlockIDs.AluminiumPyramidSegment;
