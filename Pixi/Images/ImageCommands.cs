@@ -143,7 +143,7 @@ namespace Pixi.Images
                 //position.y = zero_y;
             }
             Logging.CommandLog($"Placed {img.width}x{img.height} image beside you ({blockCount} blocks total)");
-			Logging.MetaLog($"Saved {(img.width * img.height) - blockCount} blocks ({img.width * img.height / blockCount}x) while placing {filepath}");
+			Logging.MetaLog($"Saved {(img.width * img.height) - blockCount} blocks ({blockCount / (img.width * img.height)}%) while placing {filepath}");
         }
 
         public static void Pixelate2DFileToTextBlock(string filepath)

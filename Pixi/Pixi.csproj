@@ -804,6 +804,15 @@
     <Reference Include="GamecraftModdingAPI">
       <HintPath>..\..\ref\Plugins\GamecraftModdingAPI.dll</HintPath>
     </Reference>
+    <Reference Include="GamecraftModdingAPI">
+      <HintPath>..\..\ref\Plugins\GamecraftModdingAPI.dll</HintPath>
+    </Reference>
   </ItemGroup>
 <!--End Dependencies-->
+  <ItemGroup>
+    <None Remove="cubes-id.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="cubes-id.json" />
+  </ItemGroup>
 </Project>

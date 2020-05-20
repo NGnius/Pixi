@@ -7,13 +7,10 @@ using UnityEngine;
 using Unity.Mathematics; // float3
 
 using IllusionPlugin;
-using GamecraftModdingAPI;
-using GamecraftModdingAPI.Commands;
 using GamecraftModdingAPI.Utility;
-using GamecraftModdingAPI.Blocks;
-using GamecraftModdingAPI.Players;
 
 using Pixi.Images;
+using Pixi.Robots;
 
 namespace Pixi
 {
@@ -29,7 +26,7 @@ namespace Pixi
 		public void OnApplicationQuit()
 		{
             // Shutdown this mod
-			GamecraftModdingAPI.Utility.Logging.LogDebug($"{Name} has shutdown");
+			Logging.LogDebug($"{Name} has shutdown");
 
             // Shutdown the Gamecraft modding API last
 			GamecraftModdingAPI.Main.Shutdown();
@@ -48,8 +45,11 @@ namespace Pixi
 			ImageCommands.CreateImportCommand();
 			ImageCommands.CreateTextCommand();
 			ImageCommands.CreateTextConsoleCommand();
-            
-			GamecraftModdingAPI.Utility.Logging.LogDebug($"{Name} has started up");
+			// Robot functionality
+			RobotCommands.CreateRobotCRFCommand();
+			RobotCommands.CreateRobotFileCommand();
+
+			Logging.LogDebug($"{Name} has started up");
 		}
 
         // unused methods

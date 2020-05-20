@@ -157,11 +157,12 @@ namespace Pixi.Images
                     Color pixel = img.GetPixel(x, y);
                     imgString.Append("<color=");
                     imgString.Append(HexPixel(pixel));
-                    imgString.Append(">\u25a0</color>");
+					imgString.Append(">");
+                    imgString.Append("\u25a0");
                 }
                 imgString.Append("<br>");
             }
-			imgString.Append("</cspace></line-height>");
+			imgString.Append("</color></cspace></line-height>");
 			return imgString.ToString();
 		}
     }
