@@ -5,12 +5,14 @@ Think of it like automatic pixel art.
 
 ## Installation
 
-To install the Pixi mod, copy `Pixi.dll` (from the latest release) into the `Plugins` folder in Gamecraft's main folder. 
-You'll also need [GamecraftModdingAPI](https://git.exmods.org/modtainers/GamecraftModdingAPI) installed and Gamecraft patched with [GCIPA](https://git.exmods.org/modtainers/GCIPA/releases). 
+Before installing Pixi, please patch Gamecraft with [GCIPA](https://git.exmods.org/modtainers/GCIPA/releases) and install the latest version of [GamecraftModdingAPI](https://git.exmods.org/modtainers/GamecraftModdingAPI/releases). 
+
+To install Pixi, copy `Pixi.dll` (from the latest release) into the `Plugins` folder in Gamecraft's main folder. 
+Alternately, follow the install guide: https://www.exmods.org/guides/install.html (ignore the part about a zip file -- move Pixi.dll into the Plugins folder instead). 
 
 ## Usage
 
-Pixi adds new commands to Gamecraft's command line to import images into a game. 
+Pixi adds new commands to Gamecraft's command line to import images (and more) into a game. 
 Since Pixi places vanilla Gamecraft blocks, imported images should be visible without Pixi installed. 
 
 ### Commands
@@ -49,13 +51,14 @@ The default thickness is 1.
 ### Behaviour
 
 PixiText and PixiConsole share the same image conversion system. 
-The conversion system converts every pixel to a [<color> tag](http://digitalnativestudios.com/textmeshpro/docs/rich-text/#color) followed by a square text character. 
+The conversion system converts every pixel to a [color tag](http://digitalnativestudios.com/textmeshpro/docs/rich-text/#color) followed by a square text character. 
+Thanks to TextMeshPro's support for the full colour spectrum, colour accuracy for these commands is very good. 
 For PixiText, the resulting character string is set to the text field of the text block that the command places. 
 For PixiConsole, the character string is automatically set to a console block in the form `ChangeTextBlockCommand [text block id] [character string]`. 
 
 Pixi2D takes an image file and converts every pixel to a coloured block. 
 Unfortunately, an image file supports over 6 million colours and Gamecraft only has 100 paint colours (and only 90 are used by Pixi2D). 
-Pixi2D uses an algorithm to convert each pixel an image into the closest paint colour, but colour accuracy will never be as good as a regular image. 
+Pixi2D uses an algorithm to convert each pixel in an image into the closest paint colour, but colour accuracy will never be as good as a regular image. 
 
 Pixi2D's colour-conversion algorithm also uses pixel transparency so you can cut out shapes. 
 A pixel which has opacity of less than 50% will be ignored. 

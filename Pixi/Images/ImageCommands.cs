@@ -206,8 +206,8 @@ namespace Pixi.Images
 			ConsoleBlock console = ConsoleBlock.PlaceNew(position);
 			// set console's command
 			console.Command = "ChangeTextBlockCommand";
-			console.Arg1 = textBlockId;
-			console.Arg2 = text;
+			console.Arg1 = "\"" + textBlockId + "\"";
+			console.Arg2 = "\"" + text + "\"";
 			console.Arg3 = "";
 		}
     }
