@@ -331,7 +331,7 @@ namespace Pixi.Robots
 			if (!map.ContainsKey(cubeId))
 			{
 				result.block = BlockIDs.TextBlock;
-				result.placeholder = "Unknown cube #" + cubeId.ToString();
+				result.name = "Unknown cube #" + cubeId.ToString();
 				//result.rotation = float3.zero;
 #if DEBUG
 				Logging.MetaLog($"Unknown cubeId {cubeId}");
@@ -411,7 +411,7 @@ namespace Pixi.Robots
 			else
 			{
 				result.block = BlockIDs.TextBlock;
-				result.placeholder = cubeName;
+				result.name = cubeName;
 			}
 		}
 	}

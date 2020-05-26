@@ -58,16 +58,21 @@ namespace Pixi.Robots
 			float3 position = new Player(PlayerType.Local).Position;
 			position.y += (float)blockSize;
 			CubeInfo[] cubes = CubeUtility.ParseCubes(robot.Value);
+			Block[] blocks = new Block[cubes.Length];
 			for (int c = 0; c < cubes.Length; c++) // sometimes I wish this were C++
 			{
 				CubeInfo cube = cubes[c];
 				float3 realPosition = (cube.position * (float)blockSize) + position;
-				Block newBlock = Block.PlaceNew(cube.block, realPosition, cube.rotation, cube.color, cube.darkness, scale: cube.scale);
+				blocks[c] = Block.PlaceNew(cube.block, realPosition, cube.rotation, cube.color, cube.darkness, scale: cube.scale);
+			}
+			for (int c = 0; c < cubes.Length; c++)
+			{
+				CubeInfo cube = cubes[c];
 				// the goal is for this to never evaluate to true (ie all cubes are translated correctly)
-				if (!string.IsNullOrEmpty(cube.placeholder) && cube.block == BlockIDs.TextBlock)
-				{
-					newBlock.Specialise<TextBlock>().Text = cube.placeholder;
-				}
+                if (!string.IsNullOrEmpty(cube.name) && cube.block == BlockIDs.TextBlock)
+                {
+					blocks[c].Specialise<TextBlock>().Text = cube.name;
+                }
 			}
 			Logging.CommandLog($"Placed {robot.Value.name} by {robot.Value.addedByDisplayName} ({cubes.Length} cubes) beside you");
 		}
@@ -97,15 +102,20 @@ namespace Pixi.Robots
             float3 position = new Player(PlayerType.Local).Position;
             position.y += (float)blockSize;
             CubeInfo[] cubes = CubeUtility.ParseCubes(robot);
+			Block[] blocks = new Block[cubes.Length];
             for (int c = 0; c < cubes.Length; c++) // sometimes I wish this were C++
             {
                 CubeInfo cube = cubes[c];
                 float3 realPosition = (cube.position * (float)blockSize) + position;
-                Block newBlock = Block.PlaceNew(cube.block, realPosition, cube.rotation, cube.color, cube.darkness, scale: cube.scale);
+                blocks[c] = Block.PlaceNew(cube.block, realPosition, cube.rotation, cube.color, cube.darkness, scale: cube.scale);
+            }
+			for (int c = 0; c < cubes.Length; c++)
+            {
+				CubeInfo cube = cubes[c];
                 // the goal is for this to never evaluate to true (ie all cubes are translated correctly)
-                if (!string.IsNullOrEmpty(cube.placeholder) && cube.block == BlockIDs.TextBlock)
+                if (!string.IsNullOrEmpty(cube.name) && cube.block == BlockIDs.TextBlock)
                 {
-                    newBlock.Specialise<TextBlock>().Text = cube.placeholder;
+					blocks[c].Specialise<TextBlock>().Text = cube.name;
                 }
             }
             Logging.CommandLog($"Placed {robot.name} by {robot.addedByDisplayName} ({cubes.Length} cubes) beside you");

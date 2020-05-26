@@ -23,6 +23,6 @@ namespace Pixi.Robots
 
 		public float3 scale;
 
-		public string placeholder;
+		public string name;
     }
 }
