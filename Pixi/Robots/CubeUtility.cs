@@ -7,15 +7,21 @@ using System.Runtime.CompilerServices;
 using RobocraftX.Common;
 using Newtonsoft.Json;
 using Unity.Mathematics;
+using UnityEngine;
 
 using GamecraftModdingAPI.Blocks;
 using GamecraftModdingAPI.Utility;
+using GamecraftModdingAPI;
+
+using Pixi.Common;
 
 namespace Pixi.Robots
 {
     public static class CubeUtility
     {
 		private static Dictionary<uint, string> map = null;
+
+		private static Dictionary<uint, BlockJsonInfo[]> blueprintMap = null;
 
 		public static RobotStruct? ParseRobotInfo(string robotInfo)
 		{
@@ -69,7 +75,7 @@ namespace Pixi.Robots
 		public static CubeInfo TranslateSpacialEnumerations(uint cubeId, byte x, byte y, byte z, byte rotation, byte colour, byte colour_x, byte colour_y, byte colour_z)
 		{
 			if (x != colour_x || z != colour_z || y != colour_y) return default;
-			CubeInfo result = new CubeInfo { visible = true };
+			CubeInfo result = new CubeInfo { visible = true, cubeId = cubeId };
 			TranslateBlockColour(colour, ref result);
 			TranslateBlockPosition(x, y, z, ref result);
 			TranslateBlockRotation(rotation, ref result);
@@ -80,7 +86,7 @@ namespace Pixi.Robots
 			return result;
 		}
 
-		//[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		private static void TranslateBlockRotation(byte rotation, ref CubeInfo result)
 		{
             // face refers to the face of the block connected to the bottom of the current one
@@ -413,6 +419,66 @@ namespace Pixi.Robots
 				result.block = BlockIDs.TextBlock;
 				result.name = cubeName;
 			}
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Block[] BuildBlueprintOrTextBlock(CubeInfo cube, float3 actualPosition, int scale = 3)
+		{
+            // actualPosition is the middle of the cube
+			if (blueprintMap == null) LoadBlueprintMap();
+			if (!blueprintMap.ContainsKey(cube.cubeId) || scale != 3)
+			{
+#if DEBUG
+				Logging.LogWarning($"Missing blueprint for {cube.name} (id:{cube.cubeId}), substituting {cube.block}");
+#endif
+				return new Block[] { Block.PlaceNew(cube.block, actualPosition, cube.rotation, cube.color, cube.darkness, scale: cube.scale) };
+			}
+#if DEBUG
+			Logging.MetaLog($"Found blueprint for {cube.name} (id:{cube.cubeId})");
+#endif
+			Quaternion cubeQuaternion = Quaternion.Euler(cube.rotation);
+			BlockJsonInfo[] blueprint = blueprintMap[cube.cubeId];
+			float3 correctionVec = new float3((float)(0), (float)(RobotCommands.blockSize), (float)(0));
+			Block[] placedBlocks = new Block[blueprint.Length];
+			for (int i = 0; i < blueprint.Length; i++)
+			{
+				BlockColor blueprintBlockColor = ColorSpaceUtility.QuantizeToBlockColor(blueprint[i].color);
+				BlockColors blockColor = blueprintBlockColor.Color == BlockColors.White && blueprintBlockColor.Darkness == 0 ? cube.color : blueprintBlockColor.Color;
+				byte blockDarkness = blueprintBlockColor.Color == BlockColors.White && blueprintBlockColor.Darkness == 0 ? cube.darkness : blueprintBlockColor.Darkness;
+				float3 bluePos = new float3(blueprint[i].position[0], blueprint[i].position[1], blueprint[i].position[2]);
+				float3 blueScale = new float3(blueprint[i].scale[0], blueprint[i].scale[1], blueprint[i].scale[2]);
+				float3 blueRot = new float3(blueprint[i].rotation[0], blueprint[i].rotation[1], blueprint[i].rotation[2]);
+				float3 physicalLocation = (float3)(cubeQuaternion * bluePos) + actualPosition;// + (blueprintSizeRotated / 2);
+				//physicalLocation.x += blueprintSize.x / 2;
+				physicalLocation -= (float3)(cubeQuaternion * correctionVec);
+				//physicalLocation.y -= (float)(RobotCommands.blockSize * scale / 2);
+				//float3 physicalScale = (float3)(cubeQuaternion * blueScale); // this actually over-rotates when combined with rotation
+				float3 physicalScale = blueScale;
+				float3 physicalRotation = (cubeQuaternion * Quaternion.Euler(blueRot)).eulerAngles;
+#if DEBUG
+				Logging.MetaLog($"Placing blueprint block at {physicalLocation} rot{physicalRotation} scale{physicalScale}");
+				Logging.MetaLog($"Location math check original:{bluePos} rotated: {(float3)(cubeQuaternion * bluePos)} actualPos: {actualPosition} result: {physicalLocation}");
+				Logging.MetaLog($"Scale math check original:{blueScale} rotation: {(float3)cubeQuaternion.eulerAngles} result: {physicalScale}");
+				Logging.MetaLog($"Rotation math check original:{blueRot} rotated: {(cubeQuaternion * Quaternion.Euler(blueRot))} result: {physicalRotation}");
+#endif
+				placedBlocks[i] = Block.PlaceNew(VoxelObjectNotationUtility.NameToEnum(blueprint[i].name),
+				                                 physicalLocation,
+				                                 physicalRotation,
+				                                 blockColor,
+				                                 blockDarkness,
+				                                 scale: physicalScale);
+			}
+#if DEBUG
+			Logging.MetaLog($"Placed {placedBlocks.Length} blocks for blueprint {cube.name} (id:{cube.cubeId})");
+#endif
+			return placedBlocks;
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static void LoadBlueprintMap()
+		{
+			StreamReader bluemap = new StreamReader(Assembly.GetExecutingAssembly().GetManifestResourceStream("Pixi.blueprints.json"));
+			blueprintMap = JsonConvert.DeserializeObject<Dictionary<uint, BlockJsonInfo[]>>(bluemap.ReadToEnd());
 		}
 	}
 }

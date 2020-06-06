@@ -6,7 +6,7 @@ namespace Pixi.Robots
 {
 	public struct CubeInfo
     {
-        // so you can't inherit from structs in C#...
+        // you can't inherit from structs in C#...
         // this is an extension of BlockInfo
 		public BlockIDs block;
 
@@ -24,5 +24,7 @@ namespace Pixi.Robots
 		public float3 scale;
 
 		public string name;
+
+		public uint cubeId;
     }
 }

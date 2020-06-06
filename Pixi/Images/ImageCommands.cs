@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Text;
 using System.Security.Cryptography;
@@ -92,6 +93,7 @@ namespace Pixi.Images
             position.x += 1f;
 			position.y += (float)blockSize;
             float zero_y = position.y;
+			Stopwatch timer = Stopwatch.StartNew();
             // convert the image to blocks
             // this groups same-colored pixels in the same column into a single block to reduce the block count
             // any further pixel-grouping optimisations (eg 2D grouping) risk increasing conversion time higher than O(x*y)
@@ -142,8 +144,9 @@ namespace Pixi.Images
                 }
                 //position.y = zero_y;
             }
-            Logging.CommandLog($"Placed {img.width}x{img.height} image beside you ({blockCount} blocks total)");
-			Logging.MetaLog($"Saved {(img.width * img.height) - blockCount} blocks ({blockCount / (img.width * img.height)}%) while placing {filepath}");
+			timer.Stop();
+			Logging.CommandLog($"Placed {img.width}x{img.height} image beside you ({blockCount} blocks total, {blockCount * 100 / (img.width * img.height)}%)");
+			Logging.MetaLog($"Placed {blockCount} in {timer.ElapsedMilliseconds}ms (saved {(img.width * img.height) - blockCount} blocks -- {blockCount * 100 / (img.width * img.height)}% original size) for {filepath}");
         }
 
         public static void Pixelate2DFileToTextBlock(string filepath)
@@ -166,6 +169,7 @@ namespace Pixi.Images
             float3 position = new Player(PlayerType.Local).Position;
             position.x += 1f;
             position.y += (float)blockSize;
+			Stopwatch timer = Stopwatch.StartNew();
 			string text = PixelUtility.TextureToString(img);
 			TextBlock textBlock = TextBlock.PlaceNew(position, scale: new float3(Mathf.Ceil(img.width / 16), 1, Mathf.Ceil(img.height / 16)));
 			textBlock.Text = text;
@@ -179,6 +183,9 @@ namespace Pixi.Images
 				textId += textHash[i].ToString("X2");
 			}
 			textBlock.TextBlockId = textId;
+			timer.Stop();
+			Logging.CommandLog($"Placed {img.width}x{img.height} image in text block named {textId} beside you ({text.Length} characters)");
+			Logging.MetaLog($"Completed image text block {textId} synthesis in {timer.ElapsedMilliseconds}ms containing {text.Length} characters for {img.width*img.height} pixels");
 		}
 
         public static void Pixelate2DFileToCommand(string filepath, string textBlockId)
@@ -201,6 +208,7 @@ namespace Pixi.Images
             float3 position = new Player(PlayerType.Local).Position;
             position.x += 1f;
             position.y += (float)blockSize;
+			Stopwatch timer = Stopwatch.StartNew();
             float zero_y = position.y;
             string text = PixelUtility.TextureToString(img); // conversion
 			ConsoleBlock console = ConsoleBlock.PlaceNew(position);
@@ -209,6 +217,8 @@ namespace Pixi.Images
 			console.Arg1 = "\"" + textBlockId + "\"";
 			console.Arg2 = "\"" + text + "\"";
 			console.Arg3 = "";
+			Logging.CommandLog($"Placed {img.width}x{img.height} image in console block beside you ({text.Length} characters)");
+			Logging.MetaLog($"Completed image console block {textBlockId} synthesis in {timer.ElapsedMilliseconds}ms containing {text.Length} characters for {img.width * img.height} pixels");
 		}
     }
 }

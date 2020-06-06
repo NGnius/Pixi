@@ -48,6 +48,10 @@ namespace Pixi
 			// Robot functionality
 			RobotCommands.CreateRobotCRFCommand();
 			RobotCommands.CreateRobotFileCommand();
+#if DEBUG
+			// Development functionality
+			RobotCommands.CreatePartDumpCommand();
+#endif
 
 			Logging.LogDebug($"{Name} has started up");
 		}
