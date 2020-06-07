@@ -90,7 +90,9 @@ namespace Pixi.Images
                 return;
             }
 			Logging.CommandLog($"Image size: {img.width}x{img.height}");
-            float3 position = new Player(PlayerType.Local).Position;
+			Player p = new Player(PlayerType.Local);
+            float3 position = p.Position;
+			BlockIDs pickedBlock = p.SelectedBlock == BlockIDs.Invalid ? BlockIDs.AluminiumCube : p.SelectedBlock;
             uint blockCount = 0;
 			Quaternion imgRotation = Quaternion.Euler(Rotation);
 			position += (float3)(imgRotation * new float3(1f, (float)blockSize, 0f));
@@ -125,7 +127,8 @@ namespace Pixi.Images
                             if (qVoxel.visible)
                             {
 								position = basePosition + (float3)(imgRotation * (new float3(0,1,0) * (float)((y * blockSize + (y - scale.y) * blockSize) / 2) + new float3(1, 0, 0) * (float)(x * blockSize)));
-								Block.PlaceNew(qVoxel.block, position, rotation: Rotation,color: qVoxel.color, darkness: qVoxel.darkness, scale: scale);
+								BlockIDs blockType = qVoxel.block == BlockIDs.AluminiumCube ? pickedBlock : qVoxel.block;
+								Block.PlaceNew(blockType, position, rotation: Rotation,color: qVoxel.color, darkness: qVoxel.darkness, scale: scale);
                                 blockCount++;
                             }
 							scale = new float3(1, 1, thiccness);
@@ -141,7 +144,8 @@ namespace Pixi.Images
                 if (qVoxel.visible)
                 {
 					position = basePosition + (float3)(imgRotation * (new float3(0, 1, 0) * (float)((img.height * blockSize + (img.height - scale.y) * blockSize) / 2) + new float3(1, 0, 0) * (float)(x * blockSize)));
-					Block.PlaceNew(qVoxel.block, position, rotation: Rotation, color: qVoxel.color, darkness: qVoxel.darkness, scale: scale);
+					BlockIDs blockType = qVoxel.block == BlockIDs.AluminiumCube ? pickedBlock : qVoxel.block;
+					Block.PlaceNew(blockType, position, rotation: Rotation, color: qVoxel.color, darkness: qVoxel.darkness, scale: scale);
                     blockCount++;
                 }
                 //position.y = zero_y;
