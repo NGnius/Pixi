@@ -69,38 +69,59 @@ namespace Pixi.Robots
 				return;
 			}
 			float3 position = new Player(PlayerType.Local).Position;
-			position.y += (float)blockSize;
+            position.y += (float)(blockSize * CubeSize * 3); // 3 is roughly the max height of any cube in RC
 			CubeInfo[] cubes = CubeUtility.ParseCubes(robot.Value);
-			Block[][] blocks = new Block[cubes.Length][];
-			for (int c = 0; c < cubes.Length; c++) // sometimes I wish this were C++
-			{
-				CubeInfo cube = cubes[c];
-				float3 realPosition = (cube.position * (float)blockSize * CubeSize) + position;
-				if (cube.block == BlockIDs.TextBlock && !string.IsNullOrEmpty(cube.name))
-				{
-                    // TextBlock block ID means it's a placeholder
-					blocks[c] = CubeUtility.BuildBlueprintOrTextBlock(cube, realPosition, CubeSize);
-				}
-				else
-				{
-					blocks[c] = new Block[] { Block.PlaceNew(cube.block, realPosition, cube.rotation, cube.color, cube.darkness, CubeSize) };
-				}
-			}
-            // build placeholders
-			// Note: this is a separate loop because everytime a new block is placed,
-            // a slow Sync() call is required to access it's properties.
-			// This way, one Sync() call is needed, instead of O(cubes.Length) calls
-			for (int c = 0; c < cubes.Length; c++)
-			{
-				CubeInfo cube = cubes[c];
-				// the goal is for this to never evaluate to true (ie all cubes are translated correctly)
-				if (!string.IsNullOrEmpty(cube.name) && cube.block == BlockIDs.TextBlock && blocks[c].Length == 1)
+            // move origin closer to player (since bots are rarely built at the garage bay origin)
+            if (cubes.Length == 0)
+            {
+                Logging.CommandLogError($"Robot data contains no cubes");
+                return;
+            }
+            float3 minPosition = cubes[0].position;
+            for (int c = 0; c < cubes.Length; c++)
+            {
+                float3 cubePos = cubes[c].position;
+                if (cubePos.x < minPosition.x)
                 {
-					//Logging.MetaLog($"Block is {blocks[c][0].Type} and was placed as {cube.block}");
-					blocks[c][0].Specialise<TextBlock>().Text = cube.name;
+                    minPosition.x = cubePos.x;
                 }
-			}
-			Logging.CommandLog($"Placed {robot.Value.name} by {robot.Value.addedByDisplayName} ({cubes.Length} cubes) beside you");
+                if (cubePos.y < minPosition.y)
+                {
+                    minPosition.y = cubePos.y;
+                }
+                if (cubePos.z < minPosition.z)
+                {
+                    minPosition.z = cubePos.z;
+                }
+            }
+            Block[][] blocks = new Block[cubes.Length][];
+            for (int c = 0; c < cubes.Length; c++) // sometimes I wish this were C++
+            {
+                CubeInfo cube = cubes[c];
+                float3 realPosition = ((cube.position - minPosition) * (float)blockSize * CubeSize) + position;
+                if (cube.block == BlockIDs.TextBlock && !string.IsNullOrEmpty(cube.name))
+                {
+                    // TextBlock block ID means it's a placeholder
+                    blocks[c] = CubeUtility.BuildBlueprintOrTextBlock(cube, realPosition, CubeSize);
+                }
+                else
+                {
+                    blocks[c] = new Block[] { Block.PlaceNew(cube.block, realPosition, cube.rotation, cube.color, cube.darkness, CubeSize) };
+                }
+            }
+            int blockCount = 0;
+            for (int c = 0; c < cubes.Length; c++)
+            {
+                CubeInfo cube = cubes[c];
+                // the goal is for this to never evaluate to true (ie all cubes are translated correctly)
+                if (!string.IsNullOrEmpty(cube.name) && cube.block == BlockIDs.TextBlock && blocks[c].Length == 1)
+                {
+                    //Logging.MetaLog($"Block is {blocks[c][0].Type} and was placed as {cube.block}");
+                    blocks[c][0].Specialise<TextBlock>().Text = cube.name;
+                }
+                blockCount += blocks[c].Length;
+            }
+            Logging.CommandLog($"Placed {robot?.name} by {robot?.addedByDisplayName} beside you ({cubes.Length}RC -> {blockCount}GC)");
 		}
 
         private static void ImportRobotOnline(string robotName)
