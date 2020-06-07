@@ -29,6 +29,8 @@ namespace Pixi.Images
 
 		private static uint thiccness = 1;
 
+		public static float3 Rotation = float3.zero;
+
 		public static void CreateThiccCommand()
 		{
 			CommandBuilder.Builder()
@@ -90,9 +92,9 @@ namespace Pixi.Images
 			Logging.CommandLog($"Image size: {img.width}x{img.height}");
             float3 position = new Player(PlayerType.Local).Position;
             uint blockCount = 0;
-            position.x += 1f;
-			position.y += (float)blockSize;
-            float zero_y = position.y;
+			Quaternion imgRotation = Quaternion.Euler(Rotation);
+			position += (float3)(imgRotation * new float3(1f, (float)blockSize, 0f));
+            float3 basePosition = position;
 			Stopwatch timer = Stopwatch.StartNew();
             // convert the image to blocks
             // this groups same-colored pixels in the same column into a single block to reduce the block count
@@ -107,7 +109,7 @@ namespace Pixi.Images
                     visible = false,
                 };
 				float3 scale = new float3(1, 1, thiccness);
-                position.x += (float)(blockSize);
+                //position.x += (float)(blockSize);
                 for (int y = 0; y < img.height; y++)
                 {
                     //position.y += (float)blockSize;
@@ -122,8 +124,8 @@ namespace Pixi.Images
                         {
                             if (qVoxel.visible)
                             {
-                                position.y = zero_y + (float)((y * blockSize + (y - scale.y) * blockSize) / 2);
-                                Block.PlaceNew(qVoxel.block, position, color: qVoxel.color, darkness: qVoxel.darkness, scale: scale);
+								position = basePosition + (float3)(imgRotation * (new float3(0,1,0) * (float)((y * blockSize + (y - scale.y) * blockSize) / 2) + new float3(1, 0, 0) * (float)(x * blockSize)));
+								Block.PlaceNew(qVoxel.block, position, rotation: Rotation,color: qVoxel.color, darkness: qVoxel.darkness, scale: scale);
                                 blockCount++;
                             }
 							scale = new float3(1, 1, thiccness);
@@ -138,8 +140,8 @@ namespace Pixi.Images
                 }
                 if (qVoxel.visible)
                 {
-                    position.y = zero_y + (float)((img.height * blockSize + (img.height - scale.y) * blockSize) / 2);
-                    Block.PlaceNew(qVoxel.block, position, color: qVoxel.color, darkness: qVoxel.darkness, scale: scale);
+					position = basePosition + (float3)(imgRotation * (new float3(0, 1, 0) * (float)((img.height * blockSize + (img.height - scale.y) * blockSize) / 2) + new float3(1, 0, 0) * (float)(x * blockSize)));
+					Block.PlaceNew(qVoxel.block, position, rotation: Rotation, color: qVoxel.color, darkness: qVoxel.darkness, scale: scale);
                     blockCount++;
                 }
                 //position.y = zero_y;
