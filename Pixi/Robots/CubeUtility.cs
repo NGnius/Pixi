@@ -438,8 +438,22 @@ namespace Pixi.Robots
 #endif
 			Quaternion cubeQuaternion = Quaternion.Euler(cube.rotation);
 			BlockJsonInfo[] blueprint = blueprintMap[cube.cubeId];
-			float3 correctionVec = new float3((float)(0), (float)(RobotCommands.blockSize), (float)(0));
+			if (blueprint.Length == 0)
+			{
+				Logging.LogWarning($"Found empty blueprint for {cube.name} (id:{cube.cubeId}), is the blueprint correct?");
+				return new Block[0];
+			}
+			float3 defaultCorrectionVec = new float3((float)(0), (float)(RobotCommands.blockSize), (float)(0));
+			float3 baseRot = new float3(blueprint[0].rotation[0], blueprint[0].rotation[1], blueprint[0].rotation[2]);
+			float3 baseScale = new float3(blueprint[0].scale[0], blueprint[0].scale[1], blueprint[0].scale[2]);
 			Block[] placedBlocks = new Block[blueprint.Length];
+			bool isBaseScaled = !(blueprint[0].scale[1] > 0f && blueprint[0].scale[1] < 2f);
+			float3 correctionVec = isBaseScaled ? (float3)(Quaternion.Euler(baseRot) * baseScale / 2) * (float)-RobotCommands.blockSize : -defaultCorrectionVec;
+            // FIXME scaled base blocks cause the blueprint to be placed in the wrong location (this also could be caused by a bug in DumpVON command)
+			if (isBaseScaled)
+			{
+				Logging.LogWarning($"Found blueprint with scaled base block for {cube.name} (id:{cube.cubeId}), this is not currently supported");
+			}
 			for (int i = 0; i < blueprint.Length; i++)
 			{
 				BlockColor blueprintBlockColor = ColorSpaceUtility.QuantizeToBlockColor(blueprint[i].color);
@@ -450,7 +464,7 @@ namespace Pixi.Robots
 				float3 blueRot = new float3(blueprint[i].rotation[0], blueprint[i].rotation[1], blueprint[i].rotation[2]);
 				float3 physicalLocation = (float3)(cubeQuaternion * bluePos) + actualPosition;// + (blueprintSizeRotated / 2);
 				//physicalLocation.x += blueprintSize.x / 2;
-				physicalLocation -= (float3)(cubeQuaternion * correctionVec);
+				physicalLocation += (float3)(cubeQuaternion * (correctionVec));
 				//physicalLocation.y -= (float)(RobotCommands.blockSize * scale / 2);
 				//float3 physicalScale = (float3)(cubeQuaternion * blueScale); // this actually over-rotates when combined with rotation
 				float3 physicalScale = blueScale;

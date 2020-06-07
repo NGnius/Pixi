@@ -186,7 +186,11 @@ namespace Pixi.Robots
 			Player local = new Player(PlayerType.Local);
 			Block baseBlock = local.GetBlockLookedAt();
 			Block[] blocks = baseBlock.GetConnectedCubes();
-			if (blocks.Length == 0) return;
+			bool isBaseScaled = !(baseBlock.Scale.x > 0 && baseBlock.Scale.x < 2 && baseBlock.Scale.y > 0 && baseBlock.Scale.y < 2 && baseBlock.Scale.z > 0 && baseBlock.Scale.z < 2);
+			if (isBaseScaled)
+			{
+				Logging.CommandLogWarning($"Detected scaled base block. This is not currently supported");
+			}
 			float3 basePos = baseBlock.Position;
 			string von = VoxelObjectNotationUtility.SerializeBlocks(blocks, new float[] { basePos.x, basePos.y, basePos.z });
 			File.WriteAllText(filename, von);
