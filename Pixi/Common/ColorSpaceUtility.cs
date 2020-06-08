@@ -16,6 +16,8 @@ namespace Pixi.Common
 
 		private static Dictionary<BlockColor, float[]> colorMap = null;
 
+		private static Dictionary<byte, BlockColor> botColorMap = null;
+
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static BlockColor QuantizeToBlockColor(Color pixel)
 		{
@@ -46,6 +48,13 @@ namespace Pixi.Common
 #endif
 			return c;
 		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static BlockColor QuantizeToBlockColor(byte cubeColorEnum)
+        {
+			if (botColorMap == null) BuildBotColorMap();
+			return botColorMap[cubeColorEnum];
+        }
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static BlockColor QuantizeToBlockColor(float[] pixel)
@@ -215,5 +224,46 @@ namespace Pixi.Common
             colorMap[new BlockColor { Color = BlockColors.Red, Darkness = 8 }] = new float[3] { 0.320f, 0.121f, 0.133f };
             colorMap[new BlockColor { Color = BlockColors.Red, Darkness = 9 }] = new float[3] { 0.687f, 0.571f, 0.661f };
         }
+
+        private static void BuildBotColorMap()
+		{
+			botColorMap = new Dictionary<byte, BlockColor>();
+            // standard colours
+			botColorMap[0] = new BlockColor { Color = BlockColors.White, Darkness = 0 };
+			botColorMap[1] = new BlockColor { Color = BlockColors.White, Darkness = 6 };
+			botColorMap[4] = new BlockColor { Color = BlockColors.White, Darkness = 8 };
+			botColorMap[5] = new BlockColor { Color = BlockColors.Red, Darkness = 5 };
+			botColorMap[2] = new BlockColor { Color = BlockColors.Orange, Darkness = 0 };
+			botColorMap[6] = new BlockColor { Color = BlockColors.Yellow, Darkness = 0 };
+			botColorMap[7] = new BlockColor { Color = BlockColors.Green, Darkness = 5 };
+			botColorMap[3] = new BlockColor { Color = BlockColors.Aqua, Darkness = 5 };
+			botColorMap[9] = new BlockColor { Color = BlockColors.Blue, Darkness = 5 };
+			botColorMap[10] = new BlockColor { Color = BlockColors.Purple, Darkness = 5 };
+            // premium colours
+			botColorMap[16] = new BlockColor { Color = BlockColors.Red, Darkness = 0 };
+			botColorMap[17] = new BlockColor { Color = BlockColors.Red, Darkness = 7 };
+			botColorMap[11] = new BlockColor { Color = BlockColors.Orange, Darkness = 6 };
+			botColorMap[18] = new BlockColor { Color = BlockColors.Purple, Darkness = 9 };
+			botColorMap[19] = new BlockColor { Color = BlockColors.Pink, Darkness = 9 };
+			botColorMap[20] = new BlockColor { Color = BlockColors.Orange, Darkness = 5 };
+			botColorMap[20] = new BlockColor { Color = BlockColors.Yellow, Darkness = 3 };
+			botColorMap[14] = new BlockColor { Color = BlockColors.Green, Darkness = 7 };
+			botColorMap[21] = new BlockColor { Color = BlockColors.Lime, Darkness = 8 };
+			botColorMap[22] = new BlockColor { Color = BlockColors.Green, Darkness = 6 };
+			botColorMap[13] = new BlockColor { Color = BlockColors.Lime, Darkness = 5 };
+            // blue gang
+			botColorMap[23] = new BlockColor { Color = BlockColors.Blue, Darkness = 8 };
+			botColorMap[24] = new BlockColor { Color = BlockColors.Aqua, Darkness = 8 };
+			botColorMap[25] = new BlockColor { Color = BlockColors.Blue, Darkness = 7 };
+			botColorMap[26] = new BlockColor { Color = BlockColors.White, Darkness = 5 };
+			botColorMap[27] = new BlockColor { Color = BlockColors.White, Darkness = 4 };
+			botColorMap[28] = new BlockColor { Color = BlockColors.Aqua, Darkness = 4 };
+			botColorMap[29] = new BlockColor { Color = BlockColors.Purple, Darkness = 8 };
+            // purples & pinks
+			botColorMap[30] = new BlockColor { Color = BlockColors.Pink, Darkness = 0 };
+			botColorMap[8] = new BlockColor { Color = BlockColors.Pink, Darkness = 5 };
+			botColorMap[31] = new BlockColor { Color = BlockColors.Pink, Darkness = 4 };
+			botColorMap[15] = new BlockColor { Color = BlockColors.Red, Darkness = 3 };
+		}
     }
 }
