@@ -220,8 +220,8 @@ namespace Pixi.Images
 			ConsoleBlock console = ConsoleBlock.PlaceNew(position);
 			// set console's command
 			console.Command = "ChangeTextBlockCommand";
-			console.Arg1 = "\"" + textBlockId + "\"";
-			console.Arg2 = "\"" + text + "\"";
+			console.Arg1 = textBlockId;
+			console.Arg2 = text;
 			console.Arg3 = "";
 			Logging.CommandLog($"Placed {img.width}x{img.height} image in console block beside you ({text.Length} characters)");
 			Logging.MetaLog($"Completed image console block {textBlockId} synthesis in {timer.ElapsedMilliseconds}ms containing {text.Length} characters for {img.width * img.height} pixels");
