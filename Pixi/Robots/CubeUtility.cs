@@ -188,6 +188,9 @@ namespace Pixi.Robots
 		{
 			// I hope these colours are accurate, I just guessed
 			// TODO colour accuracy (lol that won't ever happen)
+#if DEBUG
+			Logging.MetaLog($"Cube colour {colour}");
+#endif
 			BlockColor c = ColorSpaceUtility.QuantizeToBlockColor(colour);
 			result.color = c.Color;
 			result.darkness = c.Darkness;

@@ -246,11 +246,11 @@ namespace Pixi.Common
 			botColorMap[18] = new BlockColor { Color = BlockColors.Purple, Darkness = 9 };
 			botColorMap[19] = new BlockColor { Color = BlockColors.Pink, Darkness = 9 };
 			botColorMap[20] = new BlockColor { Color = BlockColors.Orange, Darkness = 5 };
-			botColorMap[20] = new BlockColor { Color = BlockColors.Yellow, Darkness = 3 };
-			botColorMap[14] = new BlockColor { Color = BlockColors.Green, Darkness = 7 };
-			botColorMap[21] = new BlockColor { Color = BlockColors.Lime, Darkness = 8 };
-			botColorMap[22] = new BlockColor { Color = BlockColors.Green, Darkness = 6 };
-			botColorMap[13] = new BlockColor { Color = BlockColors.Lime, Darkness = 5 };
+			botColorMap[14] = new BlockColor { Color = BlockColors.Yellow, Darkness = 3 };
+			botColorMap[21] = new BlockColor { Color = BlockColors.Green, Darkness = 7 };
+			botColorMap[22] = new BlockColor { Color = BlockColors.Lime, Darkness = 8 };
+			botColorMap[13] = new BlockColor { Color = BlockColors.Green, Darkness = 6 };
+			botColorMap[12] = new BlockColor { Color = BlockColors.Lime, Darkness = 5 };
             // blue gang
 			botColorMap[23] = new BlockColor { Color = BlockColors.Blue, Darkness = 8 };
 			botColorMap[24] = new BlockColor { Color = BlockColors.Aqua, Darkness = 8 };
