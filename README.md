@@ -108,7 +108,7 @@ Robot parsing uses information from [RobocraftAssembler](https://github.com/dddo
 
 Gamecraft interactions use the [GamecraftModdingAPI](https://git.exmods.org/modtainers/GamecraftModdingAPI). 
 
-Thanks to **TheGreenGoblin** and his Python app for converting images to coloured square characters, which inspired the PixiConsole and PixiText commands.
+Thanks to **TheGreenGoblin** and their Python app for converting images to coloured square characters, which inspired the PixiConsole and PixiText commands.
 
 Thanks to **Mr. Rotor** for all of the Robocraft blocks used in the PixiBot and PixiBotFile commands.
 
