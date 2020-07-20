@@ -29,22 +29,28 @@ namespace Pixi.Common
 				Darkness = 0,
 			};
 			BlockColor[] keys = colorMap.Keys.ToArray();
+			float geometricClosest = float.MaxValue;
 			for (int k = 0; k < keys.Length; k++)
 			{
 				float[] color = colorMap[keys[k]];
 				float[] distance = new float[3] { Math.Abs(pixel.r - color[0]), Math.Abs(pixel.g - color[1]), Math.Abs(pixel.b - color[2]) };
-				if ((distance[0] + distance[1] + distance[2]) < (closest[0] + closest[1] + closest[2]))
+				float dist = Mathf.Sqrt(Mathf.Pow(distance[0], 2) + Mathf.Pow(distance[1], 2) + Mathf.Pow(distance[2], 2));
+				if (dist < geometricClosest)
 				{
 					c = keys[k];
 					closest = distance;
-					if ((closest[0] + closest[1] + closest[2]) < optimal_delta)
+					geometricClosest = Mathf.Sqrt(Mathf.Pow(closest[0], 2) + Mathf.Pow(closest[1], 2) + Mathf.Pow(closest[2], 2));
+					if (geometricClosest < optimal_delta)
 					{
+#if DEBUG
+						Logging.MetaLog($"Final delta ({closest[0]},{closest[1]},{closest[2]}) t:{geometricClosest}");
+#endif
 						return c;
 					}
 				}
 			}
 #if DEBUG
-			Logging.MetaLog($"Final delta ({closest[0]},{closest[1]},{closest[2]}) t:{closest[0] + closest[1] + closest[2]}");
+			Logging.MetaLog($"Final delta ({closest[0]},{closest[1]},{closest[2]}) t:{geometricClosest}");
 #endif
 			return c;
 		}
