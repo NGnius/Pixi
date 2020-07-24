@@ -72,10 +72,6 @@
       <HintPath>..\ref\Gamecraft_Data\Managed\Blocks.HUDFeedbackBlocks.dll</HintPath>
       <HintPath>..\..\ref\Gamecraft_Data\Managed\Blocks.HUDFeedbackBlocks.dll</HintPath>
     </Reference>
-    <Reference Include="ClusterToWireConversion.Mock">
-      <HintPath>..\ref\Gamecraft_Data\Managed\ClusterToWireConversion.Mock.dll</HintPath>
-      <HintPath>..\..\ref\Gamecraft_Data\Managed\ClusterToWireConversion.Mock.dll</HintPath>
-    </Reference>
     <Reference Include="CommandLine">
       <HintPath>..\ref\Gamecraft_Data\Managed\CommandLine.dll</HintPath>
       <HintPath>..\..\ref\Gamecraft_Data\Managed\CommandLine.dll</HintPath>
