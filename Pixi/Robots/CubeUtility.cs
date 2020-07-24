@@ -75,7 +75,7 @@ namespace Pixi.Robots
 		public static CubeInfo TranslateSpacialEnumerations(uint cubeId, byte x, byte y, byte z, byte rotation, byte colour, byte colour_x, byte colour_y, byte colour_z)
 		{
 			if (x != colour_x || z != colour_z || y != colour_y) return default;
-			CubeInfo result = new CubeInfo { visible = true, cubeId = cubeId };
+			CubeInfo result = new CubeInfo {visible = true, cubeId = cubeId, scale = new float3(1, 1, 1)};
 			TranslateBlockColour(colour, ref result);
 			TranslateBlockPosition(x, y, z, ref result);
 			TranslateBlockRotation(rotation, ref result);
@@ -197,6 +197,22 @@ namespace Pixi.Robots
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static string CubeIdDescription(uint cubeId)
+		{
+			if (map == null)
+			{
+				StreamReader cubemap = new StreamReader(Assembly.GetExecutingAssembly().GetManifestResourceStream("Pixi.cubes-id.json"));
+				map = JsonConvert.DeserializeObject<Dictionary<uint, string>>(cubemap.ReadToEnd());
+			}
+			if (!map.ContainsKey(cubeId))
+			{
+				return "Unknown cube #" + cubeId.ToString();
+				//result.rotation = float3.zero;
+			}
+			return map[cubeId];
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		private static void TranslateBlockId(uint cubeId, ref CubeInfo result)
 		{
             if (map == null)
@@ -314,12 +330,12 @@ namespace Pixi.Robots
 				Logging.LogWarning($"Found empty blueprint for {cube.name} (id:{cube.cubeId}), is the blueprint correct?");
 				return new Block[0];
 			}
-			float3 defaultCorrectionVec = new float3((float)(0), (float)(RobotCommands.blockSize), (float)(0));
+			float3 defaultCorrectionVec = new float3((float)(0), (float)(CommandRoot.BLOCK_SIZE), (float)(0));
 			float3 baseRot = new float3(blueprint[0].rotation[0], blueprint[0].rotation[1], blueprint[0].rotation[2]);
 			float3 baseScale = new float3(blueprint[0].scale[0], blueprint[0].scale[1], blueprint[0].scale[2]);
 			Block[] placedBlocks = new Block[blueprint.Length];
 			bool isBaseScaled = !(blueprint[0].scale[1] > 0f && blueprint[0].scale[1] < 2f);
-			float3 correctionVec = isBaseScaled ? (float3)(Quaternion.Euler(baseRot) * baseScale / 2) * (float)-RobotCommands.blockSize : -defaultCorrectionVec;
+			float3 correctionVec = isBaseScaled ? (float3)(Quaternion.Euler(baseRot) * baseScale / 2) * (float)-CommandRoot.BLOCK_SIZE : -defaultCorrectionVec;
             // FIXME scaled base blocks cause the blueprint to be placed in the wrong location (this also could be caused by a bug in DumpVON command)
 			if (isBaseScaled)
 			{

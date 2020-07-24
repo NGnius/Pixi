@@ -14,27 +14,7 @@ namespace Pixi.Images
     public static class PixelUtility
     {
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static BlockInfo QuantizePixel(Color pixel)
-        {
-#if DEBUG
-            Logging.MetaLog($"Color (r:{pixel.r}, g:{pixel.g}, b:{pixel.b})");
-#endif
-			BlockColor c = ColorSpaceUtility.QuantizeToBlockColor(pixel);
-
-			BlockInfo result = new BlockInfo
-            {
-                block = pixel.a > 0.75 ? BlockIDs.AluminiumCube : BlockIDs.GlassCube,
-                color = c.Color,
-                darkness = c.Darkness,
-                visible = pixel.a > 0.5f,
-            };
-#if DEBUG
-            Logging.MetaLog($"Quantized {result.color} (b:{result.block} d:{result.darkness} v:{result.visible})");
-#endif
-            return result;
-        }
-
-        public static string HexPixel(Color pixel)
+		public static string HexPixel(Color pixel)
 		{
 			return "#"+ColorUtility.ToHtmlStringRGBA(pixel);
 		}
