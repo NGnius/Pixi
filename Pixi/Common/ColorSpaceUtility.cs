@@ -65,6 +65,14 @@ namespace Pixi.Common
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static BlockColor QuantizeToBlockColor(float[] pixel)
 		{
+			if (pixel.Length < 3 || pixel[0] < 0 || pixel[1] < 0 || pixel[2] < 0)
+			{
+				return new BlockColor
+				{
+					Color = BlockColors.Default,
+					Darkness = 0,
+				};
+			}
 			return QuantizeToBlockColor(new Color(pixel[0], pixel[1], pixel[2]));
 		}
 
@@ -229,6 +237,8 @@ namespace Pixi.Common
             colorMap[new BlockColor { Color = BlockColors.Red, Darkness = 7 }] = new float[3] { 0.455f, 0.105f, 0.108f };
             colorMap[new BlockColor { Color = BlockColors.Red, Darkness = 8 }] = new float[3] { 0.320f, 0.121f, 0.133f };
             colorMap[new BlockColor { Color = BlockColors.Red, Darkness = 9 }] = new float[3] { 0.687f, 0.571f, 0.661f };
+            // default
+            colorMap[new BlockColor { Color = BlockColors.Default, Darkness = 0 }] = new float[3] { -1f, -1f, -1f };
         }
 
         private static void BuildBotColorMap()

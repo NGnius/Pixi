@@ -9,6 +9,7 @@ using Unity.Mathematics; // float3
 using IllusionPlugin;
 using GamecraftModdingAPI.Utility;
 
+using Pixi.Common;
 using Pixi.Images;
 using Pixi.Robots;
 
@@ -19,7 +20,7 @@ namespace Pixi
 		public string Name { get; } = Assembly.GetExecutingAssembly().GetName().Name; // Pixi
 		// To change the name, change the project's name
 
-		public string Version { get; } = Assembly.GetExecutingAssembly().GetName().Version.ToString(); // 0.1.0 (for now)
+		public string Version { get; } = Assembly.GetExecutingAssembly().GetName().Version.ToString();
         // To change the version, change <Version>#.#.#</Version> in Pixi.csproj
 
         // called when Gamecraft shuts down
@@ -40,20 +41,19 @@ namespace Pixi
 			// check out the modding API docs here: https://mod.exmods.org/
 
 			// Initialize Pixi mod
-			// 2D image functionality
-			ImageCommands.CreateThiccCommand();
-			ImageCommands.CreateImportCommand();
-			ImageCommands.CreateTextCommand();
-			ImageCommands.CreateTextConsoleCommand();
+			CommandRoot root = new CommandRoot();
+			// 2D Image Functionality
+			root.Inject(new ImageCanvasImporter());
+			root.Inject(new ImageTextBlockImporter());
+			root.Inject(new ImageCommandImporter());
 			// Robot functionality
-			RobotCommands.CreateRobotCRFCommand();
-			RobotCommands.CreateRobotFileCommand();
+			root.Inject(new RobotInternetImporter());
+			//RobotCommands.CreateRobotCRFCommand();
+			//RobotCommands.CreateRobotFileCommand();
 #if DEBUG
 			// Development functionality
 			RobotCommands.CreatePartDumpCommand();
 #endif
-
-			Logging.LogDebug($"{Name} has started up");
 		}
 
         // unused methods
