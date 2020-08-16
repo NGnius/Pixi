@@ -65,7 +65,7 @@ namespace Pixi.Images
             {
                 new BlockJsonInfo
                 {
-                    color = new float[] {0f, 0f, 0f},
+                    color = new float[] {-1f, -1f, -1f},
                     name = "TextBlock",
                     position = new float[] {0f, 0f, 0f},
                     rotation = new float[] {0f, 0f, 0f},

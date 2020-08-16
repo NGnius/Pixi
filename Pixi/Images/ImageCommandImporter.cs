@@ -54,7 +54,11 @@ namespace Pixi.Images
             commandBlockContents[name] = text;
             return new BlockJsonInfo[]
             {
-                new BlockJsonInfo {name = "ConsoleBlock"}
+                new BlockJsonInfo
+                {
+                    color = new float[] {-1f, -1f, -1f},
+                    name = "ConsoleBlock"
+                }
             };
         }
 
