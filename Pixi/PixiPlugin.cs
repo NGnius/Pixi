@@ -15,16 +15,16 @@ using Pixi.Robots;
 
 namespace Pixi
 {
-	public class PixiPlugin : IPlugin // the Illusion Plugin Architecture (IPA) will ignore classes that don't implement IPlugin'
+	public class PixiPlugin : IEnhancedPlugin // the Illusion Plugin Architecture (IPA) will ignore classes that don't implement IPlugin'
 	{
-		public string Name { get; } = Assembly.GetExecutingAssembly().GetName().Name; // Pixi
+		public override string Name { get; } = Assembly.GetExecutingAssembly().GetName().Name; // Pixi
 		// To change the name, change the project's name
 
-		public string Version { get; } = Assembly.GetExecutingAssembly().GetName().Version.ToString();
+		public override string Version { get; } = Assembly.GetExecutingAssembly().GetName().Version.ToString();
         // To change the version, change <Version>#.#.#</Version> in Pixi.csproj
 
         // called when Gamecraft shuts down
-		public void OnApplicationQuit()
+		public override void OnApplicationQuit()
 		{
             // Shutdown this mod
 			Logging.LogDebug($"{Name} has shutdown");
@@ -34,7 +34,7 @@ namespace Pixi
 		}
 
         // called when Gamecraft starts up
-		public void OnApplicationStart()
+		public override void OnApplicationStart()
 		{
             // Initialize the Gamecraft modding API first
 			GamecraftModdingAPI.Main.Init();
@@ -55,15 +55,5 @@ namespace Pixi
 			RobotCommands.CreatePartDumpCommand();
 #endif
 		}
-
-        // unused methods
-
-		public void OnFixedUpdate() { } // called once per physics update
-
-		public void OnLevelWasInitialized(int level) { } // called after a level is initialized
-
-		public void OnLevelWasLoaded(int level) { } // called after a level is loaded
-
-		public void OnUpdate() { } // called once per rendered frame (frame update)
 	}
 }
