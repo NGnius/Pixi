@@ -4,9 +4,16 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 
 using UnityEngine;
+using UnityEngine.AddressableAssets;
+using UnityEngine.ResourceManagement.AsyncOperations;
 
+using GamecraftModdingAPI.App;
 using GamecraftModdingAPI.Blocks;
+using GamecraftModdingAPI.Tasks;
 using GamecraftModdingAPI.Utility;
+using MiniJSON;
+using Svelto.Tasks;
+using UnityEngine.ResourceManagement.ResourceLocations;
 
 namespace Pixi.Common
 {
@@ -21,7 +28,7 @@ namespace Pixi.Common
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static BlockColor QuantizeToBlockColor(Color pixel)
 		{
-			if (colorMap == null) BuildColorMap();
+			//if (colorMap == null) BuildColorMap();
 			float[] closest = new float[3] { 1, 1, 1 };
 			BlockColor c = new BlockColor
 			{
@@ -79,7 +86,7 @@ namespace Pixi.Common
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static float[] UnquantizeToArray(BlockColor c)
 		{
-			if (colorMap == null) BuildColorMap();
+			//if (colorMap == null) BuildColorMap();
 			return colorMap[c];
 		}
 
@@ -110,23 +117,16 @@ namespace Pixi.Common
 			});
         }
 
+		public static void LoadColorMenuEvent(object caller, MenuEventArgs info)
+		{
+			Scheduler.Schedule(new AsyncRunner());
+		}
+
 		private static void BuildColorMap()
         {
+	        // old manual version for building color map
             colorMap = new Dictionary<BlockColor, float[]>();
-            // TODO create actual color map
-            foreach (BlockColors c in Enum.GetValues(typeof(BlockColors)))
-            {
-                for (byte d = 0; d < 10; d++)
-                {
-                    BlockColor colorStruct = new BlockColor
-                    {
-                        Color = c,
-                        Darkness = d,
-                    };
-					colorMap[colorStruct] = new float[3] { 1f, 0f, 1f };
-                }
-            }
-			// this was done manually -- never again
+            // this was done manually -- never again
             // White
 			colorMap[new BlockColor { Color = BlockColors.White, Darkness = 0 }] = new float[3] { 1f, 1f, 1f};
 			colorMap[new BlockColor { Color = BlockColors.White, Darkness = 1 }] = new float[3] { 0.88f, 0.98f, 0.99f };
@@ -281,5 +281,41 @@ namespace Pixi.Common
 			botColorMap[31] = new BlockColor { Color = BlockColors.Pink, Darkness = 4 };
 			botColorMap[15] = new BlockColor { Color = BlockColors.Red, Darkness = 3 };
 		}
+
+        private class AsyncRunner : ISchedulable
+        {
+	        public IEnumerator<TaskContract> Run()
+	        {
+		        AsyncOperationHandle<TextAsset> asyncHandle = Addressables.LoadAssetAsync<TextAsset>("colours");
+		        yield return asyncHandle.Continue();
+		        Dictionary<string, object> colourData = Json.Deserialize(asyncHandle.Result.text) as Dictionary<string, object>;
+		        if (colourData == null) yield break;
+		        Client.EnterMenu -= LoadColorMenuEvent;
+		        // Logging.MetaLog((List<object>)((colourData["Colours"] as Dictionary<string, object>)["Data"] as Dictionary<string, object>)["Slots"]);
+		        // Generate color map
+		        List<object> hexColors =
+			        (((colourData["Colours"] as Dictionary<string, object>)?["Data"] as Dictionary<string, object>)?
+				        ["Slots"] as List<object>);
+		        int count = 0;
+		        colorMap = new Dictionary<BlockColor, float[]>();
+		        for (byte d = 0; d < 10; d++)
+		        {
+					foreach (BlockColors c in Enum.GetValues(typeof(BlockColors)))
+					{
+						if (c != BlockColors.Default)
+						{
+							BlockColor colorStruct = new BlockColor
+							{
+								Color = c,
+								Darkness = d,
+							};
+							Color pixel = Images.PixelUtility.PixelHex((string)hexColors[count]);
+							colorMap[colorStruct] = new float[] {pixel.r, pixel.g, pixel.b};
+							count++;
+						}
+					}
+		        }
+	        }
+        }
     }
 }
