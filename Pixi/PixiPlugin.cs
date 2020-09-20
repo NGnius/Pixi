@@ -47,12 +47,14 @@ namespace Pixi
 			root.Inject(new ImageTextBlockImporter());
 			root.Inject(new ImageCommandImporter());
 			// Robot functionality
-			root.Inject(new RobotInternetImporter());
+			var robot = new RobotInternetImporter();
+			root.Inject(robot);
 			//RobotCommands.CreateRobotCRFCommand();
 			//RobotCommands.CreateRobotFileCommand();
 #if DEBUG
 			// Development functionality
 			RobotCommands.CreatePartDumpCommand();
+			((RobotBlueprintProvider) robot.BlueprintProvider).AddReloadCommand();
 #endif
 		}
 	}

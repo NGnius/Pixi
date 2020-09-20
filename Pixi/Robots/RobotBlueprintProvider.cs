@@ -6,6 +6,7 @@ using Unity.Mathematics;
 using UnityEngine;
 
 using GamecraftModdingAPI.Blocks;
+using GamecraftModdingAPI.Commands;
 using GamecraftModdingAPI.Utility;
 using Pixi.Common;
 
@@ -95,6 +96,12 @@ namespace Pixi.Robots
 				};
 			}
             return adjustedBlueprint;
+        }
+
+        public void AddReloadCommand()
+        {
+	        CommandBuilder.Builder("PixiReload", "Reloads the robot blueprints")
+		        .Action(() => botprints = null).Build();
         }
     }
 }
