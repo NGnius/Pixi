@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net472</TargetFramework>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-    <Version>1.0.1</Version>
+    <Version>1.1.0</Version>
     <Authors>NGnius</Authors>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://git.exmods.org/NGnius/Pixi</PackageProjectUrl>
@@ -863,4 +863,13 @@
     <EmbeddedResource Include="cubes-id.json" />
     <EmbeddedResource Include="blueprints.json" />
   </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="ILRepack" Version="2.0.18" />
+    <PackageReference Include="Melanchall.DryWetMidi" Version="5.1.1" />
+  </ItemGroup>
+
+<Target Name="StaticLinkMergeAfterBuild" AfterTargets="Build">
+    <Exec Command="$(PkgILRepack)\tools\ILRepack.exe /ndebug /out:bin\$(Configuration)\net472\Pixi.dll bin\$(Configuration)\net472\Pixi.dll bin\$(Configuration)\net472\Melanchall.DryWetMidi.dll" />
+  </Target>
+
 </Project>

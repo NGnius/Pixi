@@ -8,7 +8,7 @@ using Unity.Mathematics; // float3
 
 using IllusionPlugin;
 using GamecraftModdingAPI.Utility;
-
+using Pixi.Audio;
 using Pixi.Common;
 using Pixi.Images;
 using Pixi.Robots;
@@ -54,6 +54,8 @@ namespace Pixi
 			// Development functionality
 			RobotCommands.CreatePartDumpCommand();
 #endif
+			// Audio functionality
+			root.Inject(new MidiImporter());
 		}
 	}
 }
