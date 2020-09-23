@@ -26,6 +26,11 @@ namespace Pixi.Images
         public string Name { get; } = "ImageCanvas~Spell";
 
         public BlueprintProvider BlueprintProvider { get; } = null;
+
+        public ImageCanvasImporter()
+        {
+            GamecraftModdingAPI.App.Client.EnterMenu += ColorSpaceUtility.LoadColorMenuEvent;
+        }
         
         public bool Qualifies(string name)
         {
