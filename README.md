@@ -99,6 +99,8 @@ Robot parsing uses information from [RobocraftAssembler](https://github.com/dddo
 
 Gamecraft interactions use the [GamecraftModdingAPI](https://git.exmods.org/modtainers/GamecraftModdingAPI). 
 
+MIDI file processing uses an integrated copy of melanchall's [DryWetMidi](https://github.com/melanchall/drywetmidi) library, licensed under the [MIT License](https://github.com/melanchall/drywetmidi/blob/develop/LICENSE).
+
 Thanks to **TheGreenGoblin** and their Python app for converting images to coloured square characters, which inspired the PixiConsole and PixiText commands.
 
 Thanks to **Mr. Rotor** for all of the Robocraft blocks used in the PixiBot and PixiBotFile commands.
