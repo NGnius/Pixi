@@ -54,7 +54,7 @@ namespace Pixi
 #if DEBUG
 			// Development functionality
 			RobotCommands.CreatePartDumpCommand();
-			((RobotBlueprintProvider) robot.BlueprintProvider).AddReloadCommand();
+			((RobotBlueprintProvider) robot.BlueprintProvider).AddDebugCommands();
 #endif
 		}
 	}
