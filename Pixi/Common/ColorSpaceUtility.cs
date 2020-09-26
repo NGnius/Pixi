@@ -19,7 +19,7 @@ namespace Pixi.Common
 {
 	public static class ColorSpaceUtility
 	{
-		private const float optimal_delta = 0.2f;
+		private const float optimal_delta = 0.1f;
 
 		private static Dictionary<BlockColor, float[]> colorMap = null;
 
@@ -50,14 +50,14 @@ namespace Pixi.Common
 					if (geometricClosest < optimal_delta)
 					{
 #if DEBUG
-						Logging.MetaLog($"Final delta ({closest[0]},{closest[1]},{closest[2]}) t:{geometricClosest}");
+						//Logging.MetaLog($"Final delta ({closest[0]},{closest[1]},{closest[2]}) t:{geometricClosest}");
 #endif
 						return c;
 					}
 				}
 			}
 #if DEBUG
-			Logging.MetaLog($"Final delta ({closest[0]},{closest[1]},{closest[2]}) t:{geometricClosest}");
+			//Logging.MetaLog($"Final delta ({closest[0]},{closest[1]},{closest[2]}) t:{geometricClosest}");
 #endif
 			return c;
 		}
