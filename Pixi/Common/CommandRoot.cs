@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Threading;
 using UnityEngine;
 using Unity.Mathematics;
 using Svelto.ECS;
@@ -10,6 +12,7 @@ using GamecraftModdingAPI;
 using GamecraftModdingAPI.Blocks;
 using GamecraftModdingAPI.Commands;
 using GamecraftModdingAPI.Utility;
+using Svelto.DataStructures;
 
 namespace Pixi.Common
 {
@@ -40,12 +43,60 @@ namespace Pixi.Common
         public string Description { get; } = "Import something into Gamecraft using magic. Usage: Pixi \"myfile.png\"";
         
         public Dictionary<int, Importer[]> importers = new Dictionary<int, Importer[]>();
+        
+        public static ThreadSafeDictionary<int, bool> optimisableBlockCache = new ThreadSafeDictionary<int, bool>();
 
         public const float BLOCK_SIZE = 0.2f;
         
         public const float DELTA = BLOCK_SIZE / 2048;
 
         public static int OPTIMISATION_PASSES = 2;
+
+        public static int GROUP_SIZE = 64;
+        
+        // optimisation algorithm constants
+        private static float3[] cornerMultiplicands1 = new float3[8]
+        {
+            new float3(1, 1, 1),
+            new float3(1, 1, -1),
+            new float3(-1, 1, 1),
+            new float3(-1, 1, -1),
+            new float3(-1, -1, 1),
+            new float3(-1, -1, -1),
+            new float3(1, -1, 1),
+            new float3(1, -1, -1),
+        };
+        private static float3[] cornerMultiplicands2 = new float3[8]
+        {
+            new float3(1, 1, 1),
+            new float3(1, 1, -1),
+            new float3(1, -1, 1),
+            new float3(1, -1, -1),
+            new float3(-1, 1, 1),
+            new float3(-1, 1, -1),
+            new float3(-1, -1, 1),
+            new float3(-1, -1, -1),
+        };
+        private static int[][] cornerFaceMappings = new int[][]
+        {
+            new int[] {0, 1, 2, 3}, // top
+            new int[] {2, 3, 4, 5}, // left
+            new int[] {4, 5, 6, 7}, // bottom
+            new int[] {6, 7, 0, 1}, // right
+            new int[] {0, 2, 4, 6}, // back
+            new int[] {1, 3, 5, 7}, // front
+        };
+        private static int[][] oppositeFaceMappings = new int[][]
+        {
+            new int[] {6, 7, 4, 5}, // bottom
+            new int[] {0, 1, 6, 7}, // right
+            new int[] {2, 3, 0, 1}, // top
+            new int[] {4, 5, 2, 3}, // left
+            new int[] {1, 3, 5, 7}, // front
+            new int[] {0, 2, 4, 6}, // back
+        };
+        
+        
 
         public CommandRoot()
         {
@@ -144,7 +195,7 @@ namespace Pixi.Common
             {
                 for (int pass = 0; pass < OPTIMISATION_PASSES; pass++)
                 {
-                    OptimiseBlocks(ref optVONs);
+                    OptimiseBlocks(ref optVONs, (pass + 1) * GROUP_SIZE);
 #if DEBUG
                     Logging.MetaLog($"Optimisation pass {pass} completed");
 #endif
@@ -179,7 +230,66 @@ namespace Pixi.Common
             
         }
 
-        private void OptimiseBlocks(ref List<ProcessedVoxelObjectNotation> optVONs)
+        private void OptimiseBlocks(ref List<ProcessedVoxelObjectNotation> optVONs, int chunkSize)
+        {
+            // Reduce blocks to place to reduce lag while placing and from excessive blocks in the world.
+            // Blocks are reduced by grouping similar blocks that are touching (before they're placed)
+            // multithreaded because this is an expensive (slow) operation
+            int item = 0;
+            ProcessedVoxelObjectNotation[][] groups = new ProcessedVoxelObjectNotation[optVONs.Count / chunkSize][];
+            Thread[] tasks = new Thread[groups.Length];
+            while (item < groups.Length)
+            {
+                groups[item] = new ProcessedVoxelObjectNotation[chunkSize];
+                optVONs.CopyTo(item * chunkSize, groups[item], 0, chunkSize);
+                int tmpItem = item; // scope is dumb
+                tasks[item] = new Thread(() =>
+                {
+                    groups[tmpItem] = groupBlocksBestEffort(groups[tmpItem], tmpItem);
+                });
+                tasks[item].Start();
+                item++;
+            }
+#if DEBUG
+            Logging.MetaLog($"Created {groups.Length} + 1? groups");
+#endif
+            // final group
+            ProcessedVoxelObjectNotation[] finalGroup = null;
+            Thread finalThread = null;
+            if (optVONs.Count > item * chunkSize)
+            {
+                //finalGroup = optVONs.GetRange(item * GROUP_SIZE, optVONs.Count - (item * GROUP_SIZE)).ToArray();
+                finalGroup = new ProcessedVoxelObjectNotation[optVONs.Count - (item * chunkSize)];
+                optVONs.CopyTo(item * chunkSize, finalGroup, 0, optVONs.Count - (item * chunkSize));
+                finalThread = new Thread(() =>
+                {
+                    finalGroup = groupBlocksBestEffort(finalGroup, -1);
+                });
+                finalThread.Start();
+            }
+            // gather results
+            List<ProcessedVoxelObjectNotation> result = new List<ProcessedVoxelObjectNotation>();
+            for (int i = 0; i < groups.Length; i++)
+            {
+#if DEBUG
+                Logging.MetaLog($"Waiting for completion of task {i}");
+#endif
+                tasks[i].Join();
+                result.AddRange(groups[i]);
+            }
+
+            if (finalThread != null)
+            {
+#if DEBUG
+                Logging.MetaLog($"Waiting for completion of final task");
+#endif
+                finalThread.Join();
+                result.AddRange(finalGroup);
+            }
+            optVONs = result;
+        }
+
+        private static ProcessedVoxelObjectNotation[] groupBlocksBestEffort(ProcessedVoxelObjectNotation[] blocksToOptimise, int id)
         {
             // a really complicated algorithm to determine if two similar blocks are touching (before they're placed)
             // the general concept:
@@ -194,89 +304,99 @@ namespace Pixi.Common
             // this means it's not safe to assume that block A's common face (top) can be swapped with block B's non-common opposite face (top) to get the merged block
             //
             // note2: this does not work with blocks which aren't cubes (i.e. any block where rotation matters)
-            // TODO multithread this expensive operation
-            int item = 0;
-            while (item < optVONs.Count)
+            try
             {
-                bool isItemUpdated = false;
-                ProcessedVoxelObjectNotation itemVON = optVONs[item];
-                if (isOptimisableBlock(itemVON.block))
+#if DEBUG
+                Stopwatch timer = Stopwatch.StartNew();
+#endif
+                FasterList<ProcessedVoxelObjectNotation> optVONs = new FasterList<ProcessedVoxelObjectNotation>(blocksToOptimise);
+                int item = 0;
+                while (item < optVONs.count - 1)
                 {
-                    float3[] itemCorners = calculateCorners(itemVON);
-                    int seeker = item + 1; // despite this, assume that seeker goes thru the entire list (not just blocks after item)
-                    while (seeker < optVONs.Count)
+#if DEBUG
+                    Logging.MetaLog($"({id}) Now grouping item {item}/{optVONs.count} ({100f * item/(float)optVONs.count}%)");
+#endif
+                    bool isItemUpdated = false;
+                    ProcessedVoxelObjectNotation itemVON = optVONs[item];
+                    if (isOptimisableBlock(itemVON.block))
                     {
-                        if (seeker == item)
+                        float3[] itemCorners = calculateCorners(itemVON);
+                        int seeker = item + 1; // despite this, assume that seeker goes thru the entire list (not just blocks after item)
+                        while (seeker < optVONs.count)
                         {
-                            seeker++;
-                        }
-                        else
-                        {
-                            ProcessedVoxelObjectNotation seekerVON = optVONs[seeker];
-                            //Logging.MetaLog($"Comparing {itemVON} and {seekerVON}");
-                            float3[] seekerCorners = calculateCorners(seekerVON);
-                            int[][] mapping = findMatchingCorners(itemCorners, seekerCorners);
-                            if (mapping.Length != 0
-                                && itemVON.block == seekerVON.block
-                                && itemVON.color.Color == seekerVON.color.Color
-                                && itemVON.color.Darkness == seekerVON.color.Darkness
-                                && isOptimisableBlock(seekerVON.block)) // match found
-                            {
-                                // switch out corners based on mapping
-                                //Logging.MetaLog($"Corners {float3ArrToString(itemCorners)}\nand {float3ArrToString(seekerCorners)}");
-                                //Logging.MetaLog($"Mappings (len:{mapping[0].Length}) {mapping[0][0]} -> {mapping[1][0]}\n{mapping[0][1]} -> {mapping[1][1]}\n{mapping[0][2]} -> {mapping[1][2]}\n{mapping[0][3]} -> {mapping[1][3]}\n");
-                                for (byte i = 0; i < 4; i++)
-                                {
-                                    itemCorners[mapping[0][i]] = seekerCorners[mapping[1][i]];
-                                }
-                                // remove 2nd block, since it's now part of the 1st block
-                                //Logging.MetaLog($"Removing {seekerVON}");
-                                optVONs.RemoveAt(seeker);
-                                if (seeker < item)
-                                {
-                                    item--; // note: this will never become less than 0
-                                }
-                                isItemUpdated = true;
-                                // regenerate info
-                                //Logging.MetaLog($"Final corners {float3ArrToString(itemCorners)}");
-                                updateVonFromCorners(itemCorners, ref itemVON);
-                                itemCorners = calculateCorners(itemVON);
-                                //Logging.MetaLog($"Merged block is {itemVON}");
-                            }
-                            else
+                            if (seeker == item)
                             {
                                 seeker++;
                             }
+                            else
+                            {
+                                ProcessedVoxelObjectNotation seekerVON = optVONs[seeker];
+                                //Logging.MetaLog($"Comparing {itemVON} and {seekerVON}");
+                                float3[] seekerCorners = calculateCorners(seekerVON);
+                                int[][] mapping = findMatchingCorners(itemCorners, seekerCorners);
+                                if (mapping.Length != 0
+                                    && itemVON.block == seekerVON.block
+                                    && itemVON.color.Color == seekerVON.color.Color
+                                    && itemVON.color.Darkness == seekerVON.color.Darkness
+                                    && isOptimisableBlock(seekerVON.block)) // match found
+                                {
+                                    // switch out corners based on mapping
+                                    //Logging.MetaLog($"Corners {float3ArrToString(itemCorners)}\nand {float3ArrToString(seekerCorners)}");
+                                    //Logging.MetaLog($"Mappings (len:{mapping[0].Length}) {mapping[0][0]} -> {mapping[1][0]}\n{mapping[0][1]} -> {mapping[1][1]}\n{mapping[0][2]} -> {mapping[1][2]}\n{mapping[0][3]} -> {mapping[1][3]}\n");
+                                    for (byte i = 0; i < 4; i++)
+                                    {
+                                        itemCorners[mapping[0][i]] = seekerCorners[mapping[1][i]];
+                                    }
+                                    // remove 2nd block, since it's now part of the 1st block
+                                    //Logging.MetaLog($"Removing {seekerVON}");
+                                    optVONs.RemoveAt(seeker);
+                                    if (seeker < item)
+                                    {
+                                        item--; // note: this will never become less than 0
+                                    }
+                                    isItemUpdated = true;
+                                    // regenerate info
+                                    //Logging.MetaLog($"Final corners {float3ArrToString(itemCorners)}");
+                                    updateVonFromCorners(itemCorners, ref itemVON);
+                                    itemCorners = calculateCorners(itemVON);
+                                    //Logging.MetaLog($"Merged block is {itemVON}");
+                                }
+                                else
+                                {
+                                    seeker++;
+                                }
+                            }
                         }
-                    }
 
-                    if (isItemUpdated)
-                    {
-                        optVONs[item] = itemVON;
-                        //Logging.MetaLog($"Optimised block is now {itemVON}");
+                        if (isItemUpdated)
+                        {
+                            optVONs[item] = itemVON;
+                            //Logging.MetaLog($"Optimised block is now {itemVON}");
+                        }
+                        item++;
                     }
-                    item++;
+                    else
+                    {
+                        item++;
+                    }
                 }
-                else
-                {
-                    item++;
-                }
+#if DEBUG
+                timer.Stop();
+                Logging.MetaLog($"({id}) Completed best effort grouping of range in {timer.ElapsedMilliseconds}ms");
+#endif
+                return optVONs.ToArray();
             }
+            catch (Exception e)
+            {
+                Logging.MetaLog($"({id}) Exception occured...\n{e.ToString()}");
+            }
+
+            return blocksToOptimise;
         }
 
-        private float3[] calculateCorners(ProcessedVoxelObjectNotation von)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static float3[] calculateCorners(ProcessedVoxelObjectNotation von)
         {
-            float3[] cornerMultiplicands = new float3[8]
-            {
-                new float3(1, 1, 1),
-                new float3(1, 1, -1),
-                new float3(-1, 1, 1),
-                new float3(-1, 1, -1),
-                new float3(-1, -1, 1),
-                new float3(-1, -1, -1),
-                new float3(1, -1, 1),
-                new float3(1, -1, -1),
-            };
             float3[] corners = new float3[8];
             Quaternion rotation = Quaternion.Euler(von.rotation);
             float3 rotatedScale = rotation * von.scale;
@@ -284,24 +404,14 @@ namespace Pixi.Common
             // generate corners
             for (int i = 0; i < corners.Length; i++)
             {
-                corners[i] = trueCenter + BLOCK_SIZE * (cornerMultiplicands[i] * rotatedScale / 2);
+                corners[i] = trueCenter + BLOCK_SIZE * (cornerMultiplicands1[i] * rotatedScale / 2);
             }
             return corners;
         }
 
-        private void updateVonFromCorners(float3[] corners, ref ProcessedVoxelObjectNotation von)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static void updateVonFromCorners(float3[] corners, ref ProcessedVoxelObjectNotation von)
         {
-            float3[] cornerMultiplicands = new float3[8]
-            {
-                new float3(1, 1, 1),
-                new float3(1, 1, -1),
-                new float3(1, -1, 1),
-                new float3(1, -1, -1),
-                new float3(-1, 1, 1),
-                new float3(-1, 1, -1),
-                new float3(-1, -1, 1),
-                new float3(-1, -1, -1),
-            };
             float3 newCenter = sumOfFloat3Arr(corners) / corners.Length;
             float3 newPosition = newCenter;
             Quaternion rot = Quaternion.Euler(von.rotation);
@@ -311,26 +421,9 @@ namespace Pixi.Common
             //Logging.MetaLog($"Updated VON scale {von.scale} (absolute {rotatedScale})");
         }
         
-        private int[][] findMatchingCorners(float3[] corners1, float3[] corners2)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static int[][] findMatchingCorners(float3[] corners1, float3[] corners2)
         {
-            int[][] cornerFaceMappings = new int[][]
-            {
-                new int[] {0, 1, 2, 3}, // top
-                new int[] {2, 3, 4, 5}, // left
-                new int[] {4, 5, 6, 7}, // bottom
-                new int[] {6, 7, 0, 1}, // right
-                new int[] {0, 2, 4, 6}, // back
-                new int[] {1, 3, 5, 7}, // front
-            };
-            int[][] oppositeFaceMappings = new int[][]
-            {
-                new int[] {6, 7, 4, 5}, // bottom
-                new int[] {0, 1, 6, 7}, // right
-                new int[] {2, 3, 0, 1}, // top
-                new int[] {4, 5, 2, 3}, // left
-                new int[] {1, 3, 5, 7}, // front
-                new int[] {0, 2, 4, 6}, // back
-            };
             float3[][] faces1 = facesFromCorners(corners1);
             float3[][] faces2 = facesFromCorners(corners2);
             for (byte i = 0; i < faces1.Length; i++)
@@ -355,7 +448,8 @@ namespace Pixi.Common
         }
         
         // this assumes the corners are in the order that calculateCorners outputs
-        private float3[][] facesFromCorners(float3[] corners)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static float3[][] facesFromCorners(float3[] corners)
         {
             return new float3[][]
             {
@@ -368,7 +462,8 @@ namespace Pixi.Common
             };
         }
 
-        private int[] matchFace(float3[] face1, float3[] face2)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static int[] matchFace(float3[] face1, float3[] face2)
         {
             int[] result = new int[4];
             byte count = 0;
@@ -396,7 +491,8 @@ namespace Pixi.Common
             return new int[0];
         }
 
-        private float3 sumOfFloat3Arr(float3[] arr)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static float3 sumOfFloat3Arr(float3[] arr)
         {
             float3 total = float3.zero;
             for (int i = 0; i < arr.Length; i++)
@@ -408,12 +504,19 @@ namespace Pixi.Common
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private bool isOptimisableBlock(BlockIDs block)
+        private static bool isOptimisableBlock(BlockIDs block)
         {
-            return block.ToString().EndsWith("Cube", StringComparison.InvariantCultureIgnoreCase);
+            if (optimisableBlockCache.ContainsKey((int) block))
+            {
+                return optimisableBlockCache[(int) block];
+            }
+
+            bool result = block.ToString().EndsWith("Cube", StringComparison.InvariantCultureIgnoreCase);
+            optimisableBlockCache[(int) block] = result;
+            return result;
         }
 
-        private string float3ArrToString(float3[] arr)
+        private static string float3ArrToString(float3[] arr)
         {
             string result = "[";
             foreach (float3 f in arr)
@@ -434,10 +537,11 @@ namespace Pixi.Common
             catch (Exception e)
             {
 #if DEBUG
-                    Logging.CommandLogError("RIP\n" + e);
+                Logging.CommandLogError("RIP Pixi\n" + e);
 #else
-                    Logging.CommandLogError("Pixi failed (reason: " + e.Message + ")");
+                Logging.CommandLogError("Pixi failed (reason: " + e.Message + ")");
 #endif
+                Logging.LogWarning("Pixi Error\n" + e);
             }
         }
     }
