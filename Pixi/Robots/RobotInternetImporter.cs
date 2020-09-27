@@ -134,10 +134,11 @@ namespace Pixi.Robots
 	        {
 		        Block block = blocks[c];
 		        // the goal is for this to never evaluate to true (ie all cubes are translated correctly)
-		        if (block.Type == BlockIDs.TextBlock)
+		        if (block.Type == BlockIDs.TextBlock &&
+		            (string.IsNullOrEmpty(block.Label) || block.Label == "Text Block"))
 		        {
-			       block.Specialise<TextBlock>().Text = textBlockInfo[name][textBlockInfoIndex];
-			       textBlockInfoIndex++;
+			        block.Specialise<TextBlock>().Text = textBlockInfo[name][textBlockInfoIndex];
+			        textBlockInfoIndex++;
 		        }
 	        }
 
