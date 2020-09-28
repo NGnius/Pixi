@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Security.Cryptography;
 using System.Text;
-
+using System.Text.RegularExpressions;
 using Svelto.DataStructures;
 using Unity.Mathematics;
 using UnityEngine;
@@ -124,6 +124,18 @@ namespace Pixi.Robots
 	        for (int i = 0; i < blocks.Length; i++)
 	        {
 		        blocks[i].position += pos;
+	        }
+	        // set textblock colors (replace <color="white"> with <color=#HEX> in textblocks)
+	        Regex pattern = new Regex("<color=(\"white\")|(white)>", RegexOptions.Compiled | RegexOptions.Multiline | RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
+	        for (int i = 0; i < blocks.Length; i++)
+	        {
+		        if (blocks[i].block == BlockIDs.TextBlock)
+		        {
+			        // TODO this blindly replaces color tags anywhere in metadata, not just ones that will go in the TextBlock's text field
+			        blocks[i].metadata = pattern.Replace(
+				        blocks[i].metadata,
+				        $"<color=#{ColorUtility.ToHtmlStringRGBA(ColorSpaceUtility.UnquantizeToColor(blocks[i].color))}>");
+		        }
 	        }
         }
 

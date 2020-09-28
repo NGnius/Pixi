@@ -20,7 +20,7 @@ namespace Pixi.Common
 
 		internal ProcessedVoxelObjectNotation Process()
 		{
-			BlockIDs block = ConversionUtility.BlockIDsToEnum(name);
+			BlockIDs block = ConversionUtility.BlockIDsToEnum(name.Split('\t')[0]);
 			return new ProcessedVoxelObjectNotation
 			{
 				block = block,
