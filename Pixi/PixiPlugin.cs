@@ -57,6 +57,7 @@ namespace Pixi
 #endif
 			// Audio functionality
 			root.Inject(new MidiImporter());
+			root.Inject(new AudioFakeImporter());
 		}
 	}
 }

@@ -314,6 +314,7 @@ namespace Pixi.Common
 							count++;
 						}
 					}
+					yield return asyncHandle.Continue();
 		        }
 	        }
         }

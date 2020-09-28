@@ -157,7 +157,7 @@ namespace Pixi.Common
 #endif
             // import blocks
             BlockJsonInfo[] blocksInfo = magicImporter.Import(name);
-            if (blocksInfo.Length == 0)
+            if (blocksInfo == null || blocksInfo.Length == 0)
             {
 #if DEBUG
                 Logging.CommandLogError($"Importer {magicImporter.Name} didn't provide any blocks to import. Mission Aborted!");
