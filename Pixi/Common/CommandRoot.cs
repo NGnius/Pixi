@@ -52,7 +52,7 @@ namespace Pixi.Common
 
         public static int OPTIMISATION_PASSES = 2;
 
-        public static int GROUP_SIZE = 64;
+        public static int GROUP_SIZE = 32;
         
         // optimisation algorithm constants
         private static float3[] cornerMultiplicands1 = new float3[8]
@@ -217,7 +217,16 @@ namespace Pixi.Common
                         desc.color.Darkness, 1, desc.scale);
                     blocks[i] = b;
                 }
+#if DEBUG
+                else
+                {
+                    Logging.LogWarning($"Found invalid block at index {i}\n\t{optVONsArr[i].ToString()}");
+                }
+#endif
             }
+            // handle special block parameters
+            PostProcessSpecialBlocks(ref optVONsArr, ref blocks);
+            // post processing
             magicImporter.PostProcess(name, ref blocks);
             if (magicImporter.Optimisable && blockCountPreOptimisation > blocks.Length)
             {
@@ -514,6 +523,50 @@ namespace Pixi.Common
             bool result = block.ToString().EndsWith("Cube", StringComparison.InvariantCultureIgnoreCase);
             optimisableBlockCache[(int) block] = result;
             return result;
+        }
+
+        private static void PostProcessSpecialBlocks(ref ProcessedVoxelObjectNotation[] pVONs, ref Block[] blocks)
+        {
+            // populate block attributes using metadata field from ProcessedVoxelObjectNotation
+            for (int i = 0; i < pVONs.Length; i++)
+            {
+                switch (pVONs[i].block)
+                {
+                    case BlockIDs.TextBlock:
+                        string[] textSplit = pVONs[i].metadata.Split('\t');
+                        if (textSplit.Length > 1)
+                        {
+                            TextBlock tb = blocks[i].Specialise<TextBlock>();
+                            tb.Text = textSplit[1];
+                            if (textSplit.Length > 2)
+                            {
+                                tb.TextBlockId = textSplit[2];
+                            }
+                        }
+                        break;
+                    case BlockIDs.ConsoleBlock:
+                        string[] cmdSplit = pVONs[i].metadata.Split('\t');
+                        if (cmdSplit.Length > 1)
+                        {
+                            ConsoleBlock cb = blocks[i].Specialise<ConsoleBlock>();
+                            cb.Command = cmdSplit[1];
+                            if (cmdSplit.Length > 2)
+                            {
+                                cb.Arg1 = cmdSplit[2];
+                                if (cmdSplit.Length > 3)
+                                {
+                                    cb.Arg1 = cmdSplit[3];
+                                    if (cmdSplit.Length > 4)
+                                    {
+                                        cb.Arg1 = cmdSplit[4];
+                                    }
+                                }
+                            }
+                        }
+                        break;
+                    default: break; // do nothing
+                }
+            }
         }
 
         private static string float3ArrToString(float3[] arr)

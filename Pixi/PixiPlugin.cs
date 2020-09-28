@@ -53,6 +53,7 @@ namespace Pixi
 #if DEBUG
 			// Development functionality
 			RobotCommands.CreatePartDumpCommand();
+			root.Inject(new TestImporter());
 #endif
 			// Audio functionality
 			root.Inject(new MidiImporter());
