@@ -160,21 +160,12 @@ namespace Pixi.Common
             for (int i = 0; i < optVONsArr.Length; i++)
             {
                 ProcessedVoxelObjectNotation desc = optVONsArr[i];
-                Block b;
                 if (desc.block != BlockIDs.Invalid)
                 {
-                    b = Block.PlaceNew(desc.block, desc.position, desc.rotation, desc.color.Color,
+                    Block b = Block.PlaceNew(desc.block, desc.position, desc.rotation, desc.color.Color,
                         desc.color.Darkness, 1, desc.scale);
+                    blocks[i] = b;
                 }
-                else
-                {
-                    TextBlock tb = Block.PlaceNew<TextBlock>(BlockIDs.TextBlock, desc.position, desc.rotation,
-                        desc.color.Color, desc.color.Darkness, 1, desc.scale);
-                    tb.Text = desc.metadata;
-                    b = tb;
-                }
-
-                blocks[i] = b;
             }
             magicImporter.PostProcess(name, ref blocks);
             if (magicImporter.Optimisable && blockCountPreOptimisation > blocks.Length)

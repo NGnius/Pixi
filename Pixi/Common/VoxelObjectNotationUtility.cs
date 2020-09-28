@@ -44,7 +44,7 @@ namespace Pixi.Common
 			if (origin == null) origin = origin_base;
 			return new BlockJsonInfo
 			{
-				name = block.Type == BlockIDs.TextBlock ? block.Label : block.Type.ToString(),
+				name = block.Type.ToString(),
 				position = new float[3] { block.Position.x - origin[0], block.Position.y - origin[1], block.Position.z - origin[2]},
 				rotation = new float[3] { block.Rotation.x, block.Rotation.y, block.Rotation.z },
 				color = ColorSpaceUtility.UnquantizeToArray(block.Color),
