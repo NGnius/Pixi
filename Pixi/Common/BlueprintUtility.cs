@@ -14,11 +14,18 @@ namespace Pixi.Common
             StreamReader bluemap = new StreamReader(File.OpenRead(name));
             return JsonConvert.DeserializeObject<Dictionary<string, BlockJsonInfo[]>>(bluemap.ReadToEnd());
         }
-        
+
         public static Dictionary<string, BlockJsonInfo[]> ParseBlueprintResource(string name)
         {
-            StreamReader bluemap = new StreamReader(Assembly.GetExecutingAssembly().GetManifestResourceStream(name));
-            return JsonConvert.DeserializeObject<Dictionary<string, BlockJsonInfo[]>>(bluemap.ReadToEnd());
+            StreamReader bluemap;
+#if DEBUG
+            if (File.Exists(name))
+                bluemap = File.OpenText(name);
+            else
+#endif
+                bluemap = new StreamReader(Assembly.GetExecutingAssembly().GetManifestResourceStream(name));
+            using (bluemap)
+                return JsonConvert.DeserializeObject<Dictionary<string, BlockJsonInfo[]>>(bluemap.ReadToEnd());
         }
 
         public static ProcessedVoxelObjectNotation[][] ProcessAndExpandBlocks(string name, BlockJsonInfo[] blocks, BlueprintProvider blueprints)

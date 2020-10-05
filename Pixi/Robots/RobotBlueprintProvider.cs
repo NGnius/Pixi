@@ -1,12 +1,14 @@
 using System;
 using System.Collections.Generic;
-
+using System.IO;
 using Svelto.DataStructures;
 using Unity.Mathematics;
 using UnityEngine;
 
 using GamecraftModdingAPI.Blocks;
+using GamecraftModdingAPI.Commands;
 using GamecraftModdingAPI.Utility;
+using Newtonsoft.Json;
 using Pixi.Common;
 
 namespace Pixi.Robots
@@ -96,5 +98,49 @@ namespace Pixi.Robots
 			}
             return adjustedBlueprint;
         }
+
+#if DEBUG
+        public void AddDebugCommands()
+        {
+	        CommandBuilder.Builder("PixiReload", "Reloads the robot blueprints")
+		        .Action(() => botprints = null).Build();
+	        CommandBuilder.Builder("RotateBlueprint",
+			        "Rotates a blueprint with a given ID and dumps the result to a file. 1 means 90 degrees.")
+		        .Action<string>(RotateBlueprint).Build();
+        }
+
+        private void RotateBlueprint(string parameters)
+        {
+	        var p = parameters.Split(' ');
+	        string id = p[0];
+	        var xyz = new int[3];
+	        for (int i = 0; i < xyz.Length; i++)
+		        xyz[i] = int.Parse(p[i + 1]) * 90;
+	        if (botprints == null)
+	        {
+		        botprints = BlueprintUtility.ParseBlueprintResource("Pixi.blueprints.json");
+	        }
+
+	        if (!botprints.ContainsKey(id))
+	        {
+		        Logging.CommandLogWarning("Blueprint with that ID not found.");
+		        return;
+	        }
+
+	        var bp = botprints[id];
+	        var rotChange = Quaternion.Euler(xyz[0], xyz[1], xyz[2]);
+	        for (var i = 0; i < bp.Length; i++)
+	        {
+		        ref var info =  ref bp[i];
+		        var pos = ConversionUtility.FloatArrayToFloat3(info.position);
+		        info.position = ConversionUtility.Float3ToFloatArray(rotChange * pos);
+		        var rot = Quaternion.Euler(ConversionUtility.FloatArrayToFloat3(info.rotation));
+		        info.rotation = ConversionUtility.Float3ToFloatArray((rotChange * rot).eulerAngles);
+	        }
+
+	        File.WriteAllText(id, JsonConvert.SerializeObject(bp));
+	        Logging.CommandLog("Blueprint rotated " + rotChange.eulerAngles + " and dumped");
+        }
+#endif
     }
 }

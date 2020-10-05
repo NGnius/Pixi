@@ -31,7 +31,9 @@ namespace Pixi.Robots
 		{
 			Player local = new Player(PlayerType.Local);
 			Block baseBlock = local.GetBlockLookedAt();
-			Block[] blocks = baseBlock.GetConnectedCubes();
+			Block[] blocks = local.GetSelectedBlocks();
+			if (blocks.Length == 0)
+				blocks = baseBlock.GetConnectedCubes();
 			bool isBaseScaled = !(baseBlock.Scale.x > 0 && baseBlock.Scale.x < 2 && baseBlock.Scale.y > 0 && baseBlock.Scale.y < 2 && baseBlock.Scale.z > 0 && baseBlock.Scale.z < 2);
 			if (isBaseScaled)
 			{

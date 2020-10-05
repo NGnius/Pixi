@@ -215,10 +215,10 @@ namespace Pixi.Robots
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		private static void TranslateBlockId(uint cubeId, ref CubeInfo result)
 		{
-            if (map == null)
+			if (map == null)
 			{
 				StreamReader cubemap = new StreamReader(Assembly.GetExecutingAssembly().GetManifestResourceStream("Pixi.cubes-id.json"));
-                map = JsonConvert.DeserializeObject<Dictionary<uint, string>>(cubemap.ReadToEnd());
+				map = JsonConvert.DeserializeObject<Dictionary<uint, string>>(cubemap.ReadToEnd());
 			}
 
 			if (!map.ContainsKey(cubeId))
@@ -231,81 +231,34 @@ namespace Pixi.Robots
 #endif
 			}
 			string cubeName = map[cubeId];
+
+			string gcName = cubeName.Contains("glass") || cubeName.Contains("windshield")
+				? "Glass"
+				: "Aluminium";
+			if (cubeName.Contains("round"))
+				gcName += "Rounded";
+
 			if (cubeName.Contains("cube"))
-			{
-				result.block = BlockIDs.AluminiumCube;
-                result.rotation = float3.zero;
-			}
+				gcName += "Cube";
 			else if (cubeName.Contains("prism") || cubeName.Contains("edge"))
-			{
-				if (cubeName.Contains("round"))
-				{
-					if (cubeName.Contains("glass") || cubeName.Contains("windshield"))
-                    {
-                        result.block = BlockIDs.GlassRoundedSlope;
-                    } else
-					    result.block = BlockIDs.AluminiumRoundedSlope;
-				}
-				else
-				{
-                    if (cubeName.Contains("glass") || cubeName.Contains("windshield"))
-                    {
-						result.block = BlockIDs.GlassSlope;
-                    } else
-					    result.block = BlockIDs.AluminiumSlope;
-				}
-			}
+				gcName += "Slope";
 			else if (cubeName.Contains("inner"))
-            {
-                if (cubeName.Contains("round"))
-                {
-					if (cubeName.Contains("glass") || cubeName.Contains("windshield"))
-					{
-						result.block = BlockIDs.GlassRoundedSlicedCube;
-					} else
-					    result.block = BlockIDs.AluminiumRoundedSlicedCube;
-                }
-				else
-				{
-                    if (cubeName.Contains("glass") || cubeName.Contains("windshield"))
-                    {
-                        result.block = BlockIDs.GlassSlicedCube;
-                    } else
-					    result.block = BlockIDs.AluminiumSlicedCube;
-				}
-			}
+				gcName += "SlicedCube";
 			else if (cubeName.Contains("tetra") || cubeName.Contains("corner"))
-            {
-                if (cubeName.Contains("round"))
-                {
-                    if (cubeName.Contains("glass") || cubeName.Contains("windshield"))
-                    {
-						result.block = BlockIDs.GlassRoundedCorner;
-                    } else
-                        result.block = BlockIDs.AluminiumRoundedCorner;
-                }
-				else
-				{
-                    if (cubeName.Contains("glass") || cubeName.Contains("windshield"))
-                    {
-                        result.block = BlockIDs.GlassCorner;
-                    } else
-					    result.block = BlockIDs.AluminiumCorner;
-				}
-			}
+				gcName += "Corner";
 			else if (cubeName.Contains("pyramid"))
-			{
-				result.block = BlockIDs.AluminiumPyramidSegment;
-			}
+				gcName += "PyramidSegment";
 			else if (cubeName.Contains("cone"))
-			{
-				result.block = BlockIDs.AluminiumConeSegment;
-			}
+				gcName += "ConeSegment";
 			else
 			{
 				result.block = BlockIDs.TextBlock;
 				result.name = cubeName;
+				return;
 			}
+
+			BlockIDs id = VoxelObjectNotationUtility.NameToEnum(gcName);
+			result.block = id;
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
