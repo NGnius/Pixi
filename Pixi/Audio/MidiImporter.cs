@@ -31,6 +31,8 @@ namespace Pixi.Audio
 
         public static byte Key = 0;
 
+        public static float VolumeMultiplier = 1f;
+
         public MidiImporter()
         {
             AudioTools.GenerateProgramMap();
@@ -49,10 +51,6 @@ namespace Pixi.Audio
             Logging.MetaLog($"Found {midi.GetNotes().Count()} notes over {midi.GetDuration<MidiTimeSpan>().TimeSpan} time units");
             BlockJsonInfo[] blocks = new BlockJsonInfo[(midi.GetNotes().Count() * 2) + 3];
             List<BlockJsonInfo> blocksToBuild = new List<BlockJsonInfo>();
-#if DEBUG
-            // test (for faster, but incomplete, imports)
-            if (blocks.Length > 103) blocks = new BlockJsonInfo[103];
-#endif
             // convert Midi notes to sfx blocks
             Dictionary<long, uint> breadthCache = new Dictionary<long, uint>();
             Dictionary<long, uint> depthCache = new Dictionary<long, uint>();
@@ -194,7 +192,7 @@ namespace Pixi.Audio
                 sfx.Pitch = n.NoteNumber - 60 + Key; // In MIDI, 60 is middle C, but GC uses 0 for middle C
                 sfx.TrackIndex = channelPrograms[n.Channel];
                 sfx.Is3D = ThreeDee;
-                sfx.Volume = AudioTools.VelocityToVolume(n.Velocity);
+                sfx.Volume = AudioTools.VelocityToVolume(n.Velocity) * VolumeMultiplier;
                 count++;
                 // connect wires
                 if (t == null) continue; // this should never happen

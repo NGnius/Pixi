@@ -42,7 +42,7 @@ namespace Pixi.Common
 		public static BlockJsonInfo JsonObject(Block block, float[] origin = null)
 		{
 			if (origin == null) origin = origin_base;
-			return new BlockJsonInfo
+			BlockJsonInfo jsonInfo = new BlockJsonInfo
 			{
 				name = block.Type.ToString(),
 				position = new float[3] { block.Position.x - origin[0], block.Position.y - origin[1], block.Position.z - origin[2]},
@@ -50,6 +50,37 @@ namespace Pixi.Common
 				color = ColorSpaceUtility.UnquantizeToArray(block.Color),
 				scale = new float[3] {block.Scale.x, block.Scale.y, block.Scale.z},
 			};
+			// custom stats for special blocks
+			switch (block.Type)
+			{
+				case BlockIDs.TextBlock:
+					TextBlock t = block.Specialise<TextBlock>();
+					jsonInfo.name += "\t" + t.Text + "\t" + t.TextBlockId;
+					break;
+				case BlockIDs.ConsoleBlock:
+					ConsoleBlock c = block.Specialise<ConsoleBlock>();
+					jsonInfo.name += "\t" + c.Command + "\t" + c.Arg1 + "\t" + c.Arg2 + "\t" + c.Arg3;
+					break;
+				case BlockIDs.DampedSpring:
+					DampedSpring d = block.Specialise<DampedSpring>();
+					jsonInfo.name += "\t" + d.Stiffness + "\t" + d.Damping;
+					break;
+				case BlockIDs.ServoAxle:
+				case BlockIDs.ServoHinge:
+				case BlockIDs.PneumaticAxle:
+				case BlockIDs.PneumaticHinge:
+					Servo s = block.Specialise<Servo>();
+					jsonInfo.name += "\t" + s.MinimumAngle + "\t" + s.MaximumAngle + "\t" + s.MaximumForce + "\t" +
+					                 s.Reverse;
+					break;
+				case BlockIDs.MotorM:
+				case BlockIDs.MotorS:
+					Motor m = block.Specialise<Motor>();
+					jsonInfo.name += "\t" + m.TopSpeed + "\t" + m.Torque + "\t" + m.Reverse;
+					break;
+				default: break;
+			}
+			return jsonInfo;
 		}
 
 		public static BlockIDs NameToEnum(BlockJsonInfo block)

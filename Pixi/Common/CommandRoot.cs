@@ -564,6 +564,58 @@ namespace Pixi.Common
                             }
                         }
                         break;
+                    case BlockIDs.DampedSpring:
+                        string[] springSplit = pVONs[i].metadata.Split('\t');
+                        if (springSplit.Length > 1 && float.TryParse(springSplit[1], out float stiffness))
+                        {
+                            DampedSpring d = blocks[i].Specialise<DampedSpring>();
+                            d.Stiffness = stiffness;
+                            if (springSplit.Length > 2 && float.TryParse(springSplit[2], out float damping))
+                            {
+                                d.Damping = damping;
+                            }
+                        }
+                        break;
+                    case BlockIDs.ServoAxle:
+                    case BlockIDs.ServoHinge:
+                    case BlockIDs.PneumaticAxle:
+                    case BlockIDs.PneumaticHinge:
+                        string[] servoSplit = pVONs[i].metadata.Split('\t');
+                        if (servoSplit.Length > 1 && float.TryParse(servoSplit[1], out float minAngle))
+                        {
+                            Servo s = blocks[i].Specialise<Servo>();
+                            s.MinimumAngle = minAngle;
+                            if (servoSplit.Length > 2 && float.TryParse(servoSplit[2], out float maxAngle))
+                            {
+                                s.MaximumAngle = maxAngle;
+                                if (servoSplit.Length > 3 && float.TryParse(servoSplit[3], out float maxForce))
+                                {
+                                    s.MaximumForce = maxForce;
+                                    if (servoSplit.Length > 4 && bool.TryParse(servoSplit[4], out bool reverse))
+                                    {
+                                        s.Reverse = reverse;
+                                    }
+                                }
+                            }
+                        }
+                        break;
+                    case BlockIDs.MotorM:
+                    case BlockIDs.MotorS:
+                        string[] motorSplit = pVONs[i].metadata.Split('\t');
+                        if (motorSplit.Length > 1 && float.TryParse(motorSplit[1], out float topSpeed))
+                        {
+                            Motor m = blocks[i].Specialise<Motor>();
+                            m.TopSpeed = topSpeed;
+                            if (motorSplit.Length > 2 && float.TryParse(motorSplit[2], out float torque))
+                            {
+                                m.Torque = torque;
+                                if (motorSplit.Length > 3 && bool.TryParse(motorSplit[3], out bool reverse))
+                                {
+                                    m.Reverse = reverse;
+                                }
+                            }
+                        }
+                        break;
                     default: break; // do nothing
                 }
             }
