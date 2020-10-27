@@ -35,14 +35,8 @@ namespace Pixi.Robots
 
             if (!botprints.ContainsKey(root.name) || RobotInternetImporter.CubeSize != 3)
             {
-                if (!parent.textBlockInfo.ContainsKey(name))
-                {
-                    parent.textBlockInfo[name] = new FasterList<string>();
-                }
-                BlockJsonInfo copy = root;
-                copy.name = "TextBlock";
-                Logging.MetaLog($"Parsing uint from '{root.name}'");
-                parent.textBlockInfo[name].Add(root.name + " (" + CubeUtility.CubeIdDescription(uint.Parse(root.name)) + ")");
+	            BlockJsonInfo copy = root;
+                copy.name = $"TextBlock\t{root.name} ({CubeUtility.CubeIdDescription(uint.Parse(root.name))})\tPixi";
                 return new BlockJsonInfo[1] {copy};
             }
             BlockJsonInfo[] blueprint = botprints[root.name];

@@ -27,8 +27,6 @@ namespace Pixi.Robots
         public BlueprintProvider BlueprintProvider { get; }
         
         public static int CubeSize = 3;
-        
-        internal readonly Dictionary<string, FasterList<string>> textBlockInfo = new Dictionary<string, FasterList<string>>();
 
         public RobotInternetImporter()
         {
@@ -126,34 +124,26 @@ namespace Pixi.Robots
 		        blocks[i].position += pos;
 	        }
 	        // set textblock colors (replace <color="white"> with <color=#HEX> in textblocks)
-	        Regex pattern = new Regex("<color=(\"white\")|(white)>", RegexOptions.Compiled | RegexOptions.Multiline | RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
+	        Regex pattern = new Regex("<color=((?:\"white\")|(?:white))>", RegexOptions.Compiled | RegexOptions.Multiline | RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
 	        for (int i = 0; i < blocks.Length; i++)
 	        {
 		        if (blocks[i].block == BlockIDs.TextBlock)
 		        {
 			        // TODO this blindly replaces color tags anywhere in metadata, not just ones that will go in the TextBlock's text field
+#if DEBUG
+			        Logging.MetaLog($"Replacing text field in block with colour {blocks[i].color} with #{ColorUtility.ToHtmlStringRGBA(ColorSpaceUtility.UnquantizeToColor(blocks[i].color))}");
+#endif
 			        blocks[i].metadata = pattern.Replace(
 				        blocks[i].metadata,
 				        $"<color=#{ColorUtility.ToHtmlStringRGBA(ColorSpaceUtility.UnquantizeToColor(blocks[i].color))}>");
+			        // NOTE: Regex.Replace replaces the whole match string only when there's a capture group (it's dumb, idk why).
+			        // The non-capturing groups may be messing with .NET or something
 		        }
 	        }
         }
 
         public void PostProcess(string name, ref Block[] blocks)
         {
-	        int textBlockInfoIndex = 0;
-	        for (int c = 0; c < blocks.Length; c++)
-	        {
-		        Block block = blocks[c];
-		        // the goal is for this to never evaluate to true (ie all cubes are translated correctly)
-		        if (block.Type == BlockIDs.TextBlock)
-		        {
-			       block.Specialise<TextBlock>().Text = textBlockInfo[name][textBlockInfoIndex];
-			       textBlockInfoIndex++;
-		        }
-	        }
-
-	        textBlockInfo.Remove(name);
         }
     }
 }
