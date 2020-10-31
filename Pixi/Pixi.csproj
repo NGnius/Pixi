@@ -64,10 +64,6 @@
       <HintPath>..\ref\Gamecraft_Data\Managed\Authentication.dll</HintPath>
       <HintPath>..\..\ref\Gamecraft_Data\Managed\Authentication.dll</HintPath>
     </Reference>
-    <Reference Include="BlockEntityFactory">
-      <HintPath>..\ref\Gamecraft_Data\Managed\BlockEntityFactory.dll</HintPath>
-      <HintPath>..\..\ref\Gamecraft_Data\Managed\BlockEntityFactory.dll</HintPath>
-    </Reference>
     <Reference Include="Blocks.HUDFeedbackBlocks">
       <HintPath>..\ref\Gamecraft_Data\Managed\Blocks.HUDFeedbackBlocks.dll</HintPath>
       <HintPath>..\..\ref\Gamecraft_Data\Managed\Blocks.HUDFeedbackBlocks.dll</HintPath>
@@ -187,10 +183,6 @@
     <Reference Include="Gamecraft.Wires">
       <HintPath>..\ref\Gamecraft_Data\Managed\Gamecraft.Wires.dll</HintPath>
       <HintPath>..\..\ref\Gamecraft_Data\Managed\Gamecraft.Wires.dll</HintPath>
-    </Reference>
-    <Reference Include="Gamecraft.Wires.Input">
-      <HintPath>..\ref\Gamecraft_Data\Managed\Gamecraft.Wires.Input.dll</HintPath>
-      <HintPath>..\..\ref\Gamecraft_Data\Managed\Gamecraft.Wires.Input.dll</HintPath>
     </Reference>
     <Reference Include="Gamecraft.Wires.Mockup">
       <HintPath>..\ref\Gamecraft_Data\Managed\Gamecraft.Wires.Mockup.dll</HintPath>
@@ -411,10 +403,6 @@
     <Reference Include="RobocraftX_TextBlock">
       <HintPath>..\ref\Gamecraft_Data\Managed\RobocraftX_TextBlock.dll</HintPath>
       <HintPath>..\..\ref\Gamecraft_Data\Managed\RobocraftX_TextBlock.dll</HintPath>
-    </Reference>
-    <Reference Include="RobocratX.SimulationCompositionRoot">
-      <HintPath>..\ref\Gamecraft_Data\Managed\RobocratX.SimulationCompositionRoot.dll</HintPath>
-      <HintPath>..\..\ref\Gamecraft_Data\Managed\RobocratX.SimulationCompositionRoot.dll</HintPath>
     </Reference>
     <Reference Include="StringFormatter">
       <HintPath>..\ref\Gamecraft_Data\Managed\StringFormatter.dll</HintPath>
